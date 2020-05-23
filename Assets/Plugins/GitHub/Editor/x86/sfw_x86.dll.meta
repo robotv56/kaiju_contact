@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fe5abeadcbe591e4fa9107fbc02f3998
+guid: a83159a46d87d2a4f8cec651049b9231
 timeCreated: 1493304330
 licenseType: Store
 PluginImporter:
@@ -30,7 +30,7 @@ PluginImporter:
       second:
         enabled: 0
         settings:
-          CPU: AnyCPU
+          CPU: x86
           OS: Windows
     data:
       first:
@@ -67,7 +67,7 @@ PluginImporter:
       second:
         enabled: 1
         settings:
-          CPU: x86_64
+          CPU: x86
           DefaultValueInitialized: true
           OS: Windows
     data:

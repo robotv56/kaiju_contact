@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: fe5abeadcbe591e4fa9107fbc02f3998
-timeCreated: 1493304330
+guid: 21206c65839f84d0e9ae14bc1fdc68db
+timeCreated: 1503931807
 licenseType: Store
 PluginImporter:
   serializedVersion: 2
@@ -31,45 +31,20 @@ PluginImporter:
         enabled: 0
         settings:
           CPU: AnyCPU
-          OS: Windows
-    data:
-      first:
-        Android: Android
-      second:
-        enabled: 0
-        settings:
-          CPU: ARMv7
+          OS: Linux
     data:
       first:
         Any: 
       second:
         enabled: 0
-        settings:
-          Exclude Android: 1
-          Exclude Editor: 0
-          Exclude Linux: 1
-          Exclude Linux64: 1
-          Exclude LinuxUniversal: 1
-          Exclude OSXIntel: 1
-          Exclude OSXIntel64: 1
-          Exclude OSXUniversal: 1
-          Exclude SamsungTV: 1
-          Exclude Tizen: 1
-          Exclude WebGL: 1
-          Exclude Win: 1
-          Exclude Win64: 1
-          Exclude WindowsStoreApps: 1
-          Exclude iOS: 1
-          Exclude tvOS: 1
+        settings: {}
     data:
       first:
         Editor: Editor
       second:
         enabled: 1
         settings:
-          CPU: x86_64
           DefaultValueInitialized: true
-          OS: Windows
     data:
       first:
         Facebook: Win
@@ -84,13 +59,6 @@ PluginImporter:
         enabled: 0
         settings:
           CPU: AnyCPU
-    data:
-      first:
-        Samsung TV: SamsungTV
-      second:
-        enabled: 0
-        settings:
-          STV_MODEL: STANDARD_15
     data:
       first:
         Standalone: Linux
@@ -133,33 +101,6 @@ PluginImporter:
         enabled: 0
         settings:
           CPU: AnyCPU
-    data:
-      first:
-        Windows Store Apps: WindowsStoreApps
-      second:
-        enabled: 0
-        settings:
-          CPU: AnyCPU
-          DontProcess: False
-          PlaceholderPath: 
-          SDK: AnySDK
-          ScriptingBackend: AnyScriptingBackend
-    data:
-      first:
-        iPhone: iOS
-      second:
-        enabled: 0
-        settings:
-          CompileFlags: 
-          FrameworkDependencies: 
-    data:
-      first:
-        tvOS: tvOS
-      second:
-        enabled: 0
-        settings:
-          CompileFlags: 
-          FrameworkDependencies: 
   userData: 
   assetBundleName: 
   assetBundleVariant: 

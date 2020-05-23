@@ -1400,6 +1400,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1944637615 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3697717283984452503, guid: cb0193e3e7555d24ba7ad757a14425b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 3697717284909745894}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1944637616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944637615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f1db61281524fb40bc9a1f6acce6baf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configuration: {fileID: 0}
+  downSample: 1
+  quality: 2
+  allowCloudFrontObject: 0
+  useApSystem: 0
+  useHierarchicalHeightMap: 0
+  cloudShader: {fileID: 4800000, guid: 84e97169589c5e94e8521fe4deb2e3f8, type: 3}
+  heightPreprocessShader: {fileID: 7200000, guid: 40276bd53f35a694e8d4e025ca310775,
+    type: 3}
+  cloudHeightProcessShader: {fileID: 4800000, guid: b80bf04ca56d3d642a6b925cff3f5ddf,
+    type: 3}
 --- !u!1001 &3697717284909745894
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1521,6 +1550,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -200
+      objectReference: {fileID: 0}
+    - target: {fileID: 3697717283984452501, guid: cb0193e3e7555d24ba7ad757a14425b5,
+        type: 3}
+      propertyPath: far clip plane
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 6762679100688444320, guid: cb0193e3e7555d24ba7ad757a14425b5,
         type: 3}
