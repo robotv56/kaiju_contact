@@ -646,7 +646,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 0, y: 6.609e-42, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -1418,9 +1418,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f1db61281524fb40bc9a1f6acce6baf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  configuration: {fileID: 0}
+  configuration: {fileID: 11400000, guid: 404350963e9622e46a3885b46b4263fe, type: 2}
   downSample: 1
-  quality: 2
+  quality: 0
   allowCloudFrontObject: 0
   useApSystem: 0
   useHierarchicalHeightMap: 0
