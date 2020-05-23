@@ -251,6 +251,7 @@ GameObject:
   m_Component:
   - component: {fileID: 558725306}
   - component: {fileID: 558725307}
+  - component: {fileID: 558725308}
   m_Layer: 0
   m_Name: Ocean
   m_TagString: Untagged
@@ -321,6 +322,32 @@ MonoBehaviour:
   _lodDataFlow: {fileID: 0}
   _lodDataFoam: {fileID: 0}
   _lodDataShadow: {fileID: 0}
+--- !u!114 &558725308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 558725305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7581c8217e105de4b83ca0ce4f8fa8c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mode: 0
+  _spectrum: {fileID: 0}
+  _windDirectionAngle: 0
+  _componentsPerOctave: 8
+  _weight: 1
+  _randomSeed: 0
+  _evaluateSpectrumAtRuntime: 1
+  _wavelengths: []
+  _amplitudes: []
+  _angleDegs: []
+  _phases: []
+  _directTowardsPoint: 0
+  _pointPositionXZ: {x: 0, y: 0}
+  _pointRadii: {x: 100, y: 200}
 --- !u!1 &566469869
 GameObject:
   m_ObjectHideFlags: 0
