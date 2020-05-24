@@ -26,7 +26,7 @@ public class ShellController : MonoBehaviour {
                 deleting = true;
                 Destroy(transform.Find("Shell").gameObject);
                 Destroy(transform.Find("Tracer").gameObject);
-                Destroy(gameObject, 3f);
+                Destroy(gameObject, 5f);
             }
         }
     }

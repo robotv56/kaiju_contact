@@ -1434,6 +1434,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3697717283164994851, guid: cb0193e3e7555d24ba7ad757a14425b5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3697717283984452498, guid: cb0193e3e7555d24ba7ad757a14425b5,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -1448,6 +1453,11 @@ PrefabInstance:
         type: 3}
       propertyPath: far clip plane
       value: 100000
+      objectReference: {fileID: 0}
+    - target: {fileID: 3697717284252754350, guid: cb0193e3e7555d24ba7ad757a14425b5,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6762679100688444320, guid: cb0193e3e7555d24ba7ad757a14425b5,
         type: 3}
@@ -1468,6 +1478,27 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 22.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6974963249743717023, guid: cb0193e3e7555d24ba7ad757a14425b5,
+        type: 3}
+      propertyPath: shellPrefab
+      value: 
+      objectReference: {fileID: 6387050196501215142, guid: f09c34f564a3b2e4797034f29cc45a75,
+        type: 3}
+    - target: {fileID: 6974963249743717023, guid: cb0193e3e7555d24ba7ad757a14425b5,
+        type: 3}
+      propertyPath: cannonVelocity
+      value: 1200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6974963249743717023, guid: cb0193e3e7555d24ba7ad757a14425b5,
+        type: 3}
+      propertyPath: cannonAccuracy
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6974963249743717023, guid: cb0193e3e7555d24ba7ad757a14425b5,
+        type: 3}
+      propertyPath: cannonGravity
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7995508537550480935, guid: cb0193e3e7555d24ba7ad757a14425b5,
         type: 3}
