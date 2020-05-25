@@ -21,8 +21,7 @@ ScriptedImporter:
       <presetinput identifier=\"scales_color\" uid=\"2693607710\" type=\"2\" value=\"0,0.141509,0.107879\"
       />\n  <presetinput identifier=\"scales_color_variation\" uid=\"2693600425\"
       type=\"2\" value=\"0,0.641509,0.508514\" />\n  <presetinput identifier=\"black_spots_color\"
-      uid=\"2694837165\" type=\"2\" value=\"0,0,0\" />\n  <presetinput identifier=\"scales_amount\"
-      uid=\"2693674358\" type=\"4\" value=\"200\" />\n  <presetinput identifier=\"scales_size_disorder\"
+      uid=\"2694837165\" type=\"2\" value=\"0,0,0\" />\n  <presetinput identifier=\"scales_size_disorder\"
       uid=\"2693066866\" type=\"0\" value=\"1\" />\n  <presetinput identifier=\"scales_position_random\"
       uid=\"2694253627\" type=\"0\" value=\"0.5\" />\n </sbspreset>\n"
     shaderName: Standard
