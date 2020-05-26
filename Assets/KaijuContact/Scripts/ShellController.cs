@@ -21,7 +21,7 @@ public class ShellController : MonoBehaviour {
             transform.position += velocity * Time.deltaTime;
             if ((Physics.Linecast(lastPosition, transform.position, out RaycastHit shellHit, playerMask) || transform.position.y < -0.1f) && !deleting) {
                 if (shellHit.transform.gameObject.layer == 8 || shellHit.transform.gameObject.layer == 9) {
-                    shellHit.transform.root.GetComponent<CorvetteCore>().Damage(damage);
+                    shellHit.transform.root.GetComponent<ShipCore>().Damage(damage);
                 }
                 deleting = true;
                 Destroy(transform.Find("Shell").gameObject);
