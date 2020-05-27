@@ -28,21 +28,46 @@ public class JoinScreenController : MonoBehaviour
 
             bool valid = true;
 
-            foreach(char c in array)
+            //make sure something was entered
+            if (!(inputText.Length > 0)) valid = false;
+            
+            //make sure theres only numbers and periods
+            if(valid)
             {
-                if((!char.IsDigit(c) && c != '.'))
+                foreach (char c in array)
                 {
-                    Debug.Log(inputText + " is invalid");
-                    log.text += ("\n \"" + inputText + "\" is not a valid IP adress");
-                    valid = false;
-                    break;
-                } 
+                    if ((!char.IsDigit(c) && c != '.'))
+                    {
+                        log.text += ("\n \"" + inputText + "\" is not a valid IP adress");
+                        valid = false;
+                        break;
+                    }
+                }
             }
+
+            //if all checks pass, attempt to join
             if (valid)
             {
                 log.text += ("\n Attempting to join " + inputText + "...");
-                Debug.Log(inputText + " is valid");
             }
+        }
+
+        if(log.isTextTruncated)
+        {
+            int i = 0;
+
+            foreach(char c in log.text.ToCharArray())
+            {
+                i++;
+                if(c.Equals('\n'))
+                {
+                    break;
+                }
+            }
+
+            string buffer = log.text;
+            buffer = buffer.Substring(i);
+            log.SetText(buffer);
         }
     }
 }
