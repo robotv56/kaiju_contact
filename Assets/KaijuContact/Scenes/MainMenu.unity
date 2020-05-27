@@ -699,7 +699,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 370822264}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90e320797dda87442a5a266f0f39ba22, type: 3}
   m_Name: 
@@ -1432,6 +1432,8 @@ MonoBehaviour:
   animations:
   - {fileID: 11400000, guid: c219a6d548a0866489d58fb03e9537d0, type: 2}
   - {fileID: 11400000, guid: fca5ae0c6cb687045b622ec9baa440cb, type: 2}
+  - {fileID: 11400000, guid: 02bf220c429565440b519cd45bfabaa2, type: 2}
+  - {fileID: 11400000, guid: 3fe4a68f841423e44895d1cfa6d61096, type: 2}
   directors:
   - {fileID: 1672722127}
   - {fileID: 1035003643}
@@ -1820,7 +1822,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 3fe4a68f841423e44895d1cfa6d61096, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 0
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -2920,7 +2922,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: fca5ae0c6cb687045b622ec9baa440cb, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 0
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -3340,7 +3342,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1735052698}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 686938122}
+        m_MethodName: OnJoinButtonPressed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1735052698
 MonoBehaviour:
   m_ObjectHideFlags: 0

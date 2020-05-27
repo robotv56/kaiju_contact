@@ -2,5 +2,5 @@
 {
     public static string joinIP;
 
-    public static bool uiActive = false;//used for updating UI and HUD code
+    public static bool uiActive = true;//used for updating UI and HUD code
 }

@@ -24,16 +24,16 @@ public class MenuController : MonoBehaviour
     //0 =  main menu
     //1 = join menu
 
-    public MenuState state = MenuState.MAIN;
+    public MenuState state = MenuState.MAIN;//state menu is in
 
-    private MenuState oldState;
+    private MenuState oldState;//store old state for 
 
     private bool isDirty = false;
     private bool isWorking = false;
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Escape) && state != MenuState.MAIN)//hack to make an "event" for key presses. unity pls
         {
             OnEscapeKeyPressed();
         }
@@ -41,7 +41,7 @@ public class MenuController : MonoBehaviour
         if(isDirty && !isWorking)
         {
             isDirty = false;
-            StartCoroutine("");
+            StartCoroutine("coroutine");
         }
         else if(isDirty)
         {
@@ -59,12 +59,40 @@ public class MenuController : MonoBehaviour
         switch (oldState)
         {
             //TODO
+            case MenuState.MAIN:
+                {
+                    directors[0].Play(animations[1]);//play main menu close animation
+                    yield return new WaitForSeconds(1.1f);
+                    directors[0].gameObject.SetActive(false);
+                }
+                break;
+
+            case MenuState.JOIN:
+                {
+                    directors[1].Play(animations[3]);//play main menu close animation
+                    yield return new WaitForSeconds(1.1f);
+                    directors[1].gameObject.SetActive(false);
+                }
+                break;
         }
         
         //animate new window opening
         switch (state)
         {
             //TODO
+            case MenuState.MAIN:
+                {
+                    directors[0].gameObject.SetActive(true);
+                    directors[0].Play(animations[0]);//play main menu open animation
+                }
+                break;
+
+            case MenuState.JOIN:
+                {
+                    directors[1].gameObject.SetActive(true);
+                    directors[1].Play(animations[2]);//play join menu open animation
+                }
+                break;
         }
         
         isWorking = false;
