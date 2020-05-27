@@ -27,14 +27,14 @@ public class TextTest : MonoBehaviour
             {
                 buffer += Random.Range(0,10);
                 text.SetText(buffer);
-                yield return new WaitForSeconds(0.001f);
+                yield return new WaitForSeconds(0.1f);
             }
             buffer += "\n";
             if (lines > 26)
             {
                 buffer = buffer.Substring(40);
             }
-            Debug.Log("line done");
+            //Debug.Log("line done");
             lines++;
             text.SetText(buffer);
             //yield return new WaitForSeconds(0.001f);
