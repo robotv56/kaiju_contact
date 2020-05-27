@@ -13,13 +13,13 @@ TagManager:
   - UI
   - 
   - 
-  - Player
-  - Enemy
+  - Ships
+  - Kaiju
   - Ocean
   - Obstacle
   - Projectiles
-  - Enemy Aim Helper
-  - 
+  - Missiles
+  - Aim Helper
   - 
   - 
   - 

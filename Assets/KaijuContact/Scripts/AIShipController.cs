@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIController : MonoBehaviour {
+public class AIShipController : MonoBehaviour {
 
     GameMaster gameMaster;
 
     [SerializeField] bool hostileToPlayer = true;
     private GameObject player;
-    private CorvetteCore core;
-    private CorvetteTurret turret;
+    private ShipCore core;
+    private ShipTurret turret;
     private GameObject shipPivot;
     private int playerMask = (1 << 8) + (1 << 10) + (1 << 11);
     [SerializeField] private float targetOrbitDistance = 50f;
@@ -17,8 +17,8 @@ public class AIController : MonoBehaviour {
     void Start() {
         gameMaster = GameObject.Find("GameMaster").GetComponent<GameMaster>();
         player = GameObject.Find("Corvette (player)");
-        core = GetComponent<CorvetteCore>();
-        turret = transform.Find("Ship Pivot").Find("Corvette Body").Find("Corvette Turret").GetComponent<CorvetteTurret>();
+        core = GetComponent<ShipCore>();
+        turret = transform.Find("Ship Pivot").Find("Corvette Body").Find("Corvette Turret").GetComponent<ShipTurret>();
         shipPivot = transform.Find("Ship Pivot").gameObject;
     }
     
@@ -40,12 +40,12 @@ public class AIController : MonoBehaviour {
         } else {
             core.SetRudder(-1f);
         }
-        turret.UpdateAim(player.transform.position + Quaternion.Euler(0f, player.transform.Find("Ship Pivot").eulerAngles.y, 0f) * new Vector3(0f, 0.25f, -0.65f), player.GetComponent<CorvetteCore>().GetVelocity());
+        turret.UpdateAim(player.transform.position + Quaternion.Euler(0f, player.transform.Find("Ship Pivot").eulerAngles.y, 0f) * new Vector3(0f, 0.25f, -0.65f), player.GetComponent<ShipCore>().GetVelocity());
         if (turret.IfOnTarget()) {
             turret.FireCannons(playerMask);
         }
         if (core.GetHealth() == 0f) {
-            player.GetComponent<PlayerController>().IncreaseScore();
+            //player.GetComponent<PlayerShipController>().IncreaseScore();
             gameMaster.EnemyDestroyed();
             Destroy(gameObject);
         }
