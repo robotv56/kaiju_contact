@@ -69,7 +69,7 @@ public class MenuController : MonoBehaviour
 
             case MenuState.JOIN:
                 {
-                    directors[1].Play(animations[3]);//play main menu close animation
+                    directors[1].Play(animations[3]);//play join menu close animation
                     yield return new WaitForSeconds(1.1f);
                     directors[1].gameObject.SetActive(false);
                 }
