@@ -1713,7 +1713,7 @@ GameObject:
   - component: {fileID: 649089514}
   - component: {fileID: 649089513}
   m_Layer: 0
-  m_Name: Hologram Camera
+  m_Name: Hologram Camera 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
