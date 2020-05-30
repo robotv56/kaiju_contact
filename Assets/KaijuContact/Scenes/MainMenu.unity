@@ -1668,7 +1668,6 @@ GameObject:
   m_Component:
   - component: {fileID: 649089514}
   - component: {fileID: 649089513}
-  - component: {fileID: 649089512}
   m_Layer: 0
   m_Name: Hologram Camera
   m_TagString: Untagged
@@ -1676,14 +1675,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &649089512
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 649089511}
-  m_Enabled: 1
 --- !u!20 &649089513
 Camera:
   m_ObjectHideFlags: 0
@@ -1828,6 +1819,7 @@ GameObject:
   - component: {fileID: 667975948}
   - component: {fileID: 667975947}
   - component: {fileID: 667975946}
+  - component: {fileID: 667975949}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1909,6 +1901,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667975944}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &667975949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667975944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85f2b80f7ef92c2449c3bc2dfaf81984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &686938120
 GameObject:
   m_ObjectHideFlags: 0
