@@ -52,6 +52,10 @@ public class MenuController : MonoBehaviour
             Debug.Log("Attempted to move while animating");
         }
 
+
+        //Gray=Not connected
+        //Red=Notready
+        //Green=Ready
         if(state == MenuState.JOIN || state == MenuState.HOST)
         {
             for(int i = 0; i != 6; i++)
