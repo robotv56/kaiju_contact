@@ -2658,7 +2658,14 @@ MonoBehaviour:
   directors:
   - {fileID: 1672722127}
   - {fileID: 1035003643}
-  state: 0
+  state: 2
+  playerReadyStatusIndicators:
+  - {fileID: 346627137}
+  - {fileID: 1453983038}
+  - {fileID: 861558521}
+  - {fileID: 120834263}
+  - {fileID: 731798803}
+  - {fileID: 27640424}
 --- !u!1 &700024113
 GameObject:
   m_ObjectHideFlags: 0
