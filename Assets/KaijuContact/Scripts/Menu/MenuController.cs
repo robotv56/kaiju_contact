@@ -155,4 +155,7 @@ public class MenuController : MonoBehaviour
         state = MenuState.MAIN;
         isDirty = true;
     }
+
+    //TODO write lobby manager
+
 }
