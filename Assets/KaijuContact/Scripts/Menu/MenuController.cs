@@ -34,6 +34,11 @@ public class MenuController : MonoBehaviour
     private bool isDirty = false;
     private bool isWorking = false;
 
+    private void Awake()
+    {
+        GlobalVars.menuController = this;
+    }
+
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Escape) && state != MenuState.MAIN)//hack to make an "event" for key presses. unity pls
@@ -129,7 +134,7 @@ public class MenuController : MonoBehaviour
         yield return null;
     }
 
-    //events
+    //events for main menu
     public void OnJoinButtonPressed()
     {
         oldState = state;
