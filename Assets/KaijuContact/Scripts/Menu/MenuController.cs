@@ -27,8 +27,6 @@ public class MenuController : MonoBehaviour
 
     public MenuState state = MenuState.MAIN;//state menu is in
 
-    public Image[] playerReadyStatusIndicators;
-
     private MenuState oldState;//store old state for 
 
     private bool isDirty = false;
@@ -55,25 +53,6 @@ public class MenuController : MonoBehaviour
         {
             isDirty = false;
             Debug.Log("Attempted to move while animating");
-        }
-
-
-        //Gray=Not connected
-        //Red=Notready
-        //Green=Ready
-        if(state == MenuState.JOIN || state == MenuState.HOST)
-        {
-            for(int i = 0; i != 6; i++)
-            {
-                if(GlobalVars.players[i])
-                {
-                    playerReadyStatusIndicators[i].color = Color.green;
-                }
-                else
-                {
-                    playerReadyStatusIndicators[i].color = Color.red;
-                }
-            }
         }
 
         if(Input.GetKeyDown(KeyCode.Space))
