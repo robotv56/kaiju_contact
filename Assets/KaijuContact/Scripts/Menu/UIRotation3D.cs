@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RotationTest : MonoBehaviour
+public class UIRotation3D : MonoBehaviour
 {
+    public float speed = 30;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +15,6 @@ public class RotationTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.eulerAngles += Vector3.up * Time.deltaTime * 30;
+        transform.eulerAngles += Vector3.up * Time.deltaTime * speed;
     }
 }

@@ -2,10 +2,13 @@
 using TMPro;
 using System.Collections;
 
-public class TextTest : MonoBehaviour
+public class DecorTextScroll : MonoBehaviour
 {
     public bool running = true;
     TextMeshProUGUI text;
+
+    public int linesIn = 26;
+    public int charsIn = 39;
 
     // Start is called before the first frame update
     void Start()
@@ -24,16 +27,16 @@ public class TextTest : MonoBehaviour
         {
             if(GlobalVars.uiActive)
             {
-                for (int i = 0; i != 39; i++)
+                for (int i = 0; i != charsIn; i++)
                 {
                     buffer += Random.Range(0, 10);
                     text.SetText(buffer);
                     yield return new WaitForSeconds(0.1f);
                 }
                 buffer += "\n";
-                if (lines > 26)
+                if (lines > linesIn)
                 {
-                    buffer = buffer.Substring(40);
+                    buffer = buffer.Substring(charsIn+1);
                 }
                 //Debug.Log("line done");
                 lines++;
