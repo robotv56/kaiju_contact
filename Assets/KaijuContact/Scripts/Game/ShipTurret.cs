@@ -6,10 +6,9 @@ public class ShipTurret : MonoBehaviour
 {
     private Vector3 aimPoint;
     private Vector3 aim;
-    private ShipCore core;
     private GameObject shipPivot;
     private GameObject cannonPivot;
-    private GameObject[] cannons = { null, null };
+    private GameObject cannon;
     private float turretRotation = 0f;
     private float turretRotationSpeed = 0f;
     [SerializeField] GameObject shellPrefab;
@@ -22,27 +21,30 @@ public class ShipTurret : MonoBehaviour
     [SerializeField] private float cannonRotationAcceleration = 360f;
     [SerializeField] private float cannonRotationMax_up = 40f;
     [SerializeField] private float cannonRotationMax_down = 10f;
-    [SerializeField] private float cannonVelocity = 60f;
-    [SerializeField] private float cannonAccuracy = 3f;
-    [SerializeField] private float cannonGravity = 1.25f;
+    [SerializeField] private float cannonVelocity = 2500f;
+    [SerializeField] private float cannonAccuracy = 1.25f;
+    [SerializeField] private float cannonGravity = 10f;
     private float cannonReload = 0f;
     [SerializeField] private float cannonReloadLength = 3.8f;
     [SerializeField] private float cannonDamage = 1f;
+    [SerializeField] private float cannonTrailLifetime = 3f;
+    [SerializeField] private float cannonMaxLifetime = 12f;
     private bool onTarget = false;
+
+    // Networking
+    private Vector3 networkTargetVelocity;
 
     void Start()
     {
-        core = transform.root.GetComponent<ShipCore>();
         shipPivot = transform.parent.parent.gameObject;
-        cannonPivot = transform.Find("Corvette Cannons").gameObject;
-        cannons[0] = cannonPivot.transform.Find("Corvette Cannon Right").gameObject;
-        cannons[1] = cannonPivot.transform.Find("Corvette Cannon Left").gameObject;
+        cannonPivot = transform.Find("Turret Vertical").gameObject;
+        cannon = cannonPivot.transform.Find("Barrel Point").gameObject;
     }
 
     void Update()
     {
         //Account for gravity
-        Vector3 aimDir1 = (aimPoint - transform.position).normalized;
+        Vector3 aimDir1 = (aimPoint - cannon.transform.position).normalized;
         Vector3 aimDir2 = Quaternion.Euler(0f, -Mathf.Atan2(aimDir1.x, aimDir1.z) * Mathf.Rad2Deg, 0f) * aimDir1;
         float aimCompensation = 0.5f * Mathf.Asin(cannonGravity * (aimPoint - transform.position).magnitude / Mathf.Pow(cannonVelocity, 2f)) * Mathf.Rad2Deg;
         aimDir2 = Quaternion.Euler(-aimCompensation, 0f, 0f) * aimDir2;
@@ -64,20 +66,31 @@ public class ShipTurret : MonoBehaviour
         onTarget = Mathf.Abs(RotateDifference(turretRotation, Mathf.Atan2(aimDir2.x, aimDir2.z) * Mathf.Rad2Deg)) < 2.5f;
         //Reload
         cannonReload = Mathf.Clamp(cannonReload - Time.deltaTime, 0f, cannonReloadLength);
-    }
 
-    public void FireCannons(int playerMask)
+        Debug.DrawLine(cannon.transform.position, cannon.transform.position + cannon.transform.forward * 10000f, Color.red);
+        Debug.DrawLine(cannon.transform.position, aimPoint, Color.cyan);
+
+    }
+    
+    public void FireCannon(int playerMask)
     {
         if (cannonReload == 0f)
         {
             cannonReload = cannonReloadLength;
-            for (int i = 0; i < 2; i++)
-            {
-                GameObject shell = Instantiate(shellPrefab, cannons[i].transform.position, cannons[i].transform.rotation);
-                Quaternion randomRotation = Quaternion.Euler(Random.Range(0f, cannonAccuracy), Random.Range(0f, cannonAccuracy), Random.Range(0f, cannonAccuracy));
-                shell.GetComponent<ShellController>().Setup(randomRotation * cannonPivot.transform.forward * cannonVelocity, cannonGravity, playerMask, cannonDamage);
-            }
+            GameObject shell = Instantiate(shellPrefab, cannon.transform.position, cannon.transform.rotation);
+            Quaternion randomRotation = Quaternion.Euler(Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f, Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f, Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f);
+            shell.GetComponent<ShellController>().Setup(randomRotation * cannonPivot.transform.forward * cannonVelocity, cannonGravity, playerMask, cannonDamage, cannonTrailLifetime, cannonMaxLifetime);
+
+            // Networking
+            transform.root.GetComponent<ClientMaster>().CmdHardFireCannon(playerMask, cannon.transform.position, cannon.transform.rotation, randomRotation * cannonPivot.transform.forward * cannonVelocity);
+            Debug.Log("Send Cannon Fired");
         }
+    }
+
+    public void HardFireCannon(int playerMask, Vector3 pos, Quaternion rot, Vector3 vel)
+    {
+        GameObject shell = Instantiate(shellPrefab, pos, rot);
+        shell.GetComponent<ShellController>().Setup(vel, cannonGravity, playerMask, cannonDamage, cannonTrailLifetime, cannonMaxLifetime);
     }
 
     public Vector3 GetAimPoint()
@@ -89,7 +102,7 @@ public class ShipTurret : MonoBehaviour
     {
         return onTarget;
     }
-
+    
     public void UpdateAim(Vector3 targetPoint, Vector3 targetVelocity)
     {
         Vector3 targDir = targetPoint - transform.position;
@@ -110,6 +123,14 @@ public class ShipTurret : MonoBehaviour
             timeToTarget = ttt1;
         }
         aimPoint = targetPoint + targetVelocity * timeToTarget;
+
+        // Networking
+        networkTargetVelocity = targetVelocity;
+    }
+
+    public Vector3 GetTargetVelocity()
+    {
+        return networkTargetVelocity;
     }
 
     //Returns a Vector2 containing the changed value and the changed speed;

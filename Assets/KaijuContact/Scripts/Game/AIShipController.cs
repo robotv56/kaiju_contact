@@ -16,10 +16,10 @@ public class AIShipController : MonoBehaviour {
 
     void Start() {
         gameMaster = GameObject.Find("GameMaster").GetComponent<GameMaster>();
-        player = GameObject.Find("Corvette (player)");
+        player = GameObject.Find("Corvette (player)"); //bad
         core = GetComponent<ShipCore>();
-        turret = transform.Find("Ship Pivot").Find("Corvette Body").Find("Corvette Turret").GetComponent<ShipTurret>();
-        shipPivot = transform.Find("Ship Pivot").gameObject;
+        turret = transform.Find("Ship Pivot").Find("Corvette Body").Find("Corvette Turret").GetComponent<ShipTurret>(); //bad
+        shipPivot = transform.Find("Ship Pivot").gameObject; //bad
     }
     
     void Update() {
@@ -42,7 +42,7 @@ public class AIShipController : MonoBehaviour {
         }
         turret.UpdateAim(player.transform.position + Quaternion.Euler(0f, player.transform.Find("Ship Pivot").eulerAngles.y, 0f) * new Vector3(0f, 0.25f, -0.65f), player.GetComponent<ShipCore>().GetVelocity());
         if (turret.IfOnTarget()) {
-            turret.FireCannons(playerMask);
+            turret.FireCannon(playerMask);
         }
         if (core.GetHealth() == 0f) {
             //player.GetComponent<PlayerShipController>().IncreaseScore();

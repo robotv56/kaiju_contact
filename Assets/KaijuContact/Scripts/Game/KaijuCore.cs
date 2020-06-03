@@ -9,7 +9,7 @@ public class KaijuCore : MonoBehaviour
     private Vector3 kaijuDesiredMovement;
     private Vector3 kaijuMovement;
     [SerializeField] private float kaijuSurfAcc = 65f;
-    [SerializeField] private float kaijuSurfSpeedMax = 120f;
+    [SerializeField] private float kaijuSurfSpeedMax = 100f;
     [SerializeField] private float kaijuSubAcc = 240f;
     [SerializeField] private float kaijuSubSpeedMax = 800f;
     private float kaijuDesiredRotation = 0f;
@@ -137,6 +137,21 @@ public class KaijuCore : MonoBehaviour
         kaijuDesiredRotation = desiredRotation;
     }
 
+    public float GetDesiredRotation()
+    {
+        return kaijuDesiredRotation;
+    }
+
+    public void HardSetRotation(float rotation)
+    {
+        kaijuRotation = rotation;
+    }
+
+    public float GetRotation()
+    {
+        return kaijuRotation;
+    }
+
     //Control Move
     public void SetDesiredMovement(Vector3 desiredMovement)
     {
@@ -155,6 +170,21 @@ public class KaijuCore : MonoBehaviour
         kaijuDesiredMovement = Quaternion.Euler(0f, kaijuRotation, 0f) * desiredMovement;
     }
 
+    public Vector3 GetDesiredMovement()
+    {
+        return kaijuDesiredMovement;
+    }
+
+    public void HardSetMovement(Vector3 movement)
+    {
+        kaijuMovement = movement;
+    }
+
+    public Vector3 GetMovement()
+    {
+        return kaijuMovement;
+    }
+    
     private bool FullySubmerged()
     {
         return submergedTime > submergedTransitionTime && submergedTime < submergedTimeMax - submergedTransitionTime;
@@ -200,14 +230,30 @@ public class KaijuCore : MonoBehaviour
         }
     }
 
+    public void HardSetSubmerged(float submerged)
+    {
+        submergedTime = submerged;
+    }
+
+    public float GetSubmerged()
+    {
+        return submergedTime;
+    }
+
     //Control Slash
     public void TriggerSlash()
     {
         if (slashCooldown == 0f && !FullySubmerged())
         {
-            slashCooldown = slashCooldownMax;
-            slashObject.GetComponent<KaijuSlash>().TriggerSlash(slashDamageMax);
+            HardTriggerSlash();
+            transform.parent.GetComponent<ClientMaster>().CmdTriggerSlash();
         }
+    }
+
+    public void HardTriggerSlash()
+    {
+        slashCooldown = slashCooldownMax;
+        slashObject.GetComponent<KaijuSlash>().TriggerSlash(slashDamageMax);
     }
 
     //Control Icebeam

@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShipCore : MonoBehaviour {
-
+public class ShipCore : MonoBehaviour
+{
     private float rotation;
     private float rudder;
     private float rudderTarget;
     [SerializeField] private float rudderTurnRate = 10f;
     [SerializeField] private float rudderMaximum = 20f;
-    [SerializeField] private float rudderMaxEffectSpeed = 3f;
+    [SerializeField] private float rudderMaxEffectSpeed = 25f;
     private float throttle;
     private float speed;
-    [SerializeField] private float speedMaxFwd = 10f;
-    [SerializeField] private float speedMaxRev = 3f;
-    [SerializeField] private float acceleration = 1.2f;
-    [SerializeField] private float coastDrag = 0.5f;
+    [SerializeField] private float speedMaxFwd = 125f;
+    [SerializeField] private float speedMaxRev = 25f;
+    [SerializeField] private float acceleration = 12f;
+    [SerializeField] private float coastDrag = 7f;
     [SerializeField] private float health = 30f;
     
     private GameObject shipPivot;
@@ -42,7 +42,7 @@ public class ShipCore : MonoBehaviour {
         //Debug.Log("Rudder: " + rudder + " Speed: " + speed + " Throttle: " + throttle);
         // Apply Transforms
         rotation += rudder * RudderEffectiveness(speed, rudderMaxEffectSpeed) * Time.deltaTime;
-        shipPivot.transform.rotation = Quaternion.Euler(0f, rotation, rudder * Mathf.Abs(RudderEffectiveness(speed, rudderMaxEffectSpeed) * (speed / speedMaxFwd)) * 0.45f);
+        shipPivot.transform.rotation = Quaternion.Euler(0f, rotation, Mathf.Clamp(rudder * Mathf.Abs(RudderEffectiveness(speed, rudderMaxEffectSpeed) * (speed / speedMaxFwd)) * 0.45f, -7.2f, 7.2f));
         transform.position += shipPivot.transform.forward * speed * Time.deltaTime;
     }
 
@@ -64,15 +64,55 @@ public class ShipCore : MonoBehaviour {
     {
         return shipPivot.transform.forward * speed;
     }
-
+    
     public void SetRudder(float r)
     {
         rudderTarget = r * rudderMaximum;
     }
 
+    public float GetRudder()
+    {
+        return rudderTarget;
+    }
+
+    public void HardSetRudder(float r)
+    {
+        rudder = r;
+    }
+
+    public float GetActualRudder()
+    {
+        return rudder;
+    }
+
+    public void HardSetRotation(float rot)
+    {
+        rotation = rot;
+    }
+
+    public float GetRotation()
+    {
+        return rotation;
+    }
+
     public void SetThrottle(float t)
     {
         throttle = t * GetSpeedMax(t);
+    }
+
+    public float GetThrottle()
+    {
+        return throttle;
+    }
+
+    public void HardSetSpeed(float s)
+    {
+        speed = s;
+    }
+
+    public float GetSpeed()
+    {
+        return speed;
     }
 
     private float RudderEffectiveness(float spd, float maxEffectSpeed)
