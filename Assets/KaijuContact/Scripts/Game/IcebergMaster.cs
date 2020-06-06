@@ -123,7 +123,7 @@ public class IcebergMaster : NetworkBehaviour
         icebergDamage[icebergID] += damage;
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 2)]
     private void RpcGrowIceberg(int index, float x, float z, float speed)
     {
         GrowIceberg(index, x, z, speed);
@@ -137,7 +137,7 @@ public class IcebergMaster : NetworkBehaviour
         icebergs[index].GetComponent<Iceberg>().Grow(speed);
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 2)]
     private void RpcShrinkIceberg(int index, float speed)
     {
         ShrinkIceberg(index, speed);

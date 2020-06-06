@@ -31,6 +31,8 @@ public class ClientMaster : NetworkBehaviour
     private PlayerKaijuController kaijuController = null;
     private PlayerShipController shipController = null;
 
+    private float updateTime = 0f;
+
     // Kaiju & Ship
     [SyncVar] Vector3 playerPosition;
     // Kaiju
@@ -68,6 +70,10 @@ public class ClientMaster : NetworkBehaviour
         if (isLocalPlayer && isServer)
         {
             NetworkServer.SpawnWithClientAuthority(Instantiate(icebergMasterPrefab, Vector3.zero, Quaternion.identity), connectionToClient);
+            GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().customConfig = true;
+            GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageSize = 248;
+            GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageCount = 248;
+            GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxSentMessageQueueSize = 248;
             //NetworkServer.Configure(Network.ConnectionConfig)
         }
         kaijuCore = playerObjects[0].GetComponent<KaijuCore>();
@@ -152,52 +158,58 @@ public class ClientMaster : NetworkBehaviour
         {
             shipController.isLocal = isLocalPlayer;
         }
-        int k = 0;
-        if (!isKaiju)
+        updateTime += Time.deltaTime;
+
+        if (updateTime > 0.2f)
         {
-            k = 1;
-        }
-        if (isLocalPlayer)
-        {
-            CmdUpdatePlayer(
-                playerObjects[k].transform.position,
-                kaijuCore.GetDesiredRotation(),
-                kaijuCore.GetRotation(),
-                kaijuCore.GetDesiredMovement(),
-                kaijuCore.GetMovement(),
-                kaijuCore.GetSubmerged(),
-                shipCore.GetRudder(),
-                shipCore.GetActualRudder(),
-                shipCore.GetRotation(),
-                shipCore.GetThrottle(),
-                shipCore.GetSpeed(),
-                shipTurret.GetAimPoint(),
-                shipTurret.GetTargetVelocity()
-                );
-        }
-        else
-        {
-            playerObjects[k].transform.position = playerPosition;
-            kaijuCore.SetDesiredRotation(playerDesiredRotation);
-            kaijuCore.HardSetRotation(playerKaijuRotation);
-            kaijuCore.SetDesiredMovement(playerDesiredMovement);
-            kaijuCore.HardSetMovement(playerKaijuMovement);
-            kaijuCore.HardSetSubmerged(playerSubmerged);
-            shipCore.SetRudder(playerRudder);
-            shipCore.HardSetRudder(playerActualRudder);
-            shipCore.HardSetRotation(playerShipRotation);
-            shipCore.SetThrottle(playerThrottle);
-            shipCore.HardSetSpeed(playerShipSpeed);
-            shipTurret.UpdateAim(playerAimPoint, playerTargetVelocity);
-            if (playerSlashCount > slashCount)
+            updateTime = 0f;
+            int k = 0;
+            if (!isKaiju)
             {
-                slashCount = playerSlashCount;
-                kaijuCore.HardTriggerSlash();
+                k = 1;
             }
-            if (playerShotsFired > shotsFired)
+            if (isLocalPlayer)
             {
-                shotsFired = playerShotsFired;
-                shipTurret.HardFireCannon(lastShotMask, lastShotPosition, lastShotRotation, lastShotVelocity);
+                CmdUpdatePlayer(
+                    playerObjects[k].transform.position,
+                    kaijuCore.GetDesiredRotation(),
+                    kaijuCore.GetRotation(),
+                    kaijuCore.GetDesiredMovement(),
+                    kaijuCore.GetMovement(),
+                    kaijuCore.GetSubmerged(),
+                    shipCore.GetRudder(),
+                    shipCore.GetActualRudder(),
+                    shipCore.GetRotation(),
+                    shipCore.GetThrottle(),
+                    shipCore.GetSpeed(),
+                    shipTurret.GetAimPoint(),
+                    shipTurret.GetTargetVelocity()
+                    );
+            }
+            else
+            {
+                playerObjects[k].transform.position = playerPosition;
+                kaijuCore.SetDesiredRotation(playerDesiredRotation);
+                kaijuCore.HardSetRotation(playerKaijuRotation);
+                kaijuCore.SetDesiredMovement(playerDesiredMovement);
+                kaijuCore.HardSetMovement(playerKaijuMovement);
+                kaijuCore.HardSetSubmerged(playerSubmerged);
+                shipCore.SetRudder(playerRudder);
+                shipCore.HardSetRudder(playerActualRudder);
+                shipCore.HardSetRotation(playerShipRotation);
+                shipCore.SetThrottle(playerThrottle);
+                shipCore.HardSetSpeed(playerShipSpeed);
+                shipTurret.UpdateAim(playerAimPoint, playerTargetVelocity);
+                if (playerSlashCount > slashCount)
+                {
+                    slashCount = playerSlashCount;
+                    kaijuCore.HardTriggerSlash();
+                }
+                if (playerShotsFired > shotsFired)
+                {
+                    shotsFired = playerShotsFired;
+                    shipTurret.HardFireCannon(lastShotMask, lastShotPosition, lastShotRotation, lastShotVelocity);
+                }
             }
         }
 
@@ -272,13 +284,13 @@ public class ClientMaster : NetworkBehaviour
         playerTargetVelocity = stv;
     }
 
-    [Command]
+    [Command(channel = 2)]
     public void CmdTriggerCreateIceberg(float x, float z)
     {
         GameObject.Find("IcebergMaster").GetComponent<IcebergMaster>().CreateIceberg(x, z);
     }
 
-    [Command]
+    [Command(channel = 2)]
     public void CmdTriggerDamageIceberg(int icebergID, float damage)
     {
         GameObject.Find("IcebergMaster").GetComponent<IcebergMaster>().DamageIceberg(icebergID, damage);
