@@ -13,6 +13,7 @@ public class KaijuSlash : MonoBehaviour
     private Material slashMaterial;
     [SerializeField] private AnimationCurve alphaOverTime;
     Color c = Color.white;
+    bool damageDone = false;
 
     private void Start()
     {
@@ -21,7 +22,20 @@ public class KaijuSlash : MonoBehaviour
         c.a = 0f;
         slashMaterial.color = c;
     }
-    
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == 8 && !damageDone && collision.transform.root.GetComponent<ClientMaster>().isLocalPlayer)
+        {
+            collision.transform.root.GetComponent<ClientMaster>().CmdDamageShip(damage);
+            damageDone = true;
+        }
+        if (collision.gameObject.layer == 11 && collision.gameObject.GetComponent<Iceberg>() && transform.root.GetComponent<ClientMaster>().GetIsLocalPlayer())
+        {
+            transform.root.GetComponent<ClientMaster>().CmdTriggerDamageIceberg(collision.gameObject.GetComponent<Iceberg>().GetID(), 10000f);
+        }
+    }
+
     private void Update()
     {
         if (lifetime > 0f)
@@ -42,5 +56,6 @@ public class KaijuSlash : MonoBehaviour
     {
         damage = d;
         lifetime = lifetimeMax;
+        damageDone = false;
     }
 }

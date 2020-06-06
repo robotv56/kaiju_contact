@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ShellController : MonoBehaviour
 {
+    private GameObject from;
+    private bool fromLocal;
     private Vector3 velocity;
     private float gravity;
     private Vector3 lastPosition;
@@ -24,9 +26,25 @@ public class ShellController : MonoBehaviour
             transform.position += velocity * Time.deltaTime;
             if (((Physics.Linecast(lastPosition, transform.position, out RaycastHit shellHit, playerMask) || transform.position.y < -0.1f) || aliveTime >= maxLifetime) && !deleting)
             {
-                if (aliveTime < maxLifetime && (shellHit.transform.gameObject.layer == 8 || shellHit.transform.gameObject.layer == 9))
+                if (aliveTime < maxLifetime)
                 {
-                    shellHit.transform.root.GetComponent<ShipCore>().Damage(damage);
+                    bool hitLocal = false;
+                    if (shellHit.transform.root.GetComponent<ClientMaster>())
+                    {
+                        hitLocal = shellHit.transform.root.GetComponent<ClientMaster>().GetIsLocalPlayer();
+                    }
+                    if (shellHit.transform.gameObject.layer == 11 && fromLocal)
+                    {
+                        shellHit.transform.GetComponent<Iceberg>().LocalDamage(damage, from);
+                    }
+                    if (shellHit.transform.gameObject.layer == 9 && hitLocal && shellHit.transform.gameObject.name != "Slash")
+                    {
+                        if (shellHit.transform.gameObject.name != "Kaiju Weakspot")
+                        {
+                            damage = damage * 0.1f;
+                        }
+                        shellHit.transform.root.GetComponent<ClientMaster>().CmdDamageKaiju(damage);
+                    }
                 }
                 deleting = true;
                 Destroy(transform.Find("Shell").gameObject);
@@ -44,14 +62,16 @@ public class ShellController : MonoBehaviour
         }
     }
 
-    public void Setup(Vector3 v, float g, int m, float d, float t, float l)
+    public void Setup(Vector3 velocity, float gravity, int playerMask, float damage, float trailLifetime, float maxLifetime, GameObject from, bool fromLocal)
     {
-        velocity = v;
-        gravity = g;
-        playerMask = m;
-        damage = d;
-        trailLifetime = t;
-        transform.Find("Trail").GetComponent<TrailRenderer>().time = t;
-        maxLifetime = l;
+        this.velocity = velocity;
+        this.gravity = gravity;
+        this.playerMask = playerMask;
+        this.damage = damage;
+        this.trailLifetime = trailLifetime;
+        transform.Find("Trail").GetComponent<TrailRenderer>().time = trailLifetime;
+        this.maxLifetime = maxLifetime;
+        this.from = from;
+        this.fromLocal = fromLocal;
     }
 }

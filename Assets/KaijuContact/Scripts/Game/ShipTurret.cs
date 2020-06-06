@@ -12,21 +12,21 @@ public class ShipTurret : MonoBehaviour
     private float turretRotation = 0f;
     private float turretRotationSpeed = 0f;
     [SerializeField] GameObject shellPrefab;
-    [SerializeField] private float turretRotationSpeedMax = 75f;
-    [SerializeField] float turretRotationAcceleration = 360f;
+    [SerializeField] private float turretRotationSpeedMax = 270f;
+    [SerializeField] float turretRotationAcceleration = 540f;
     [SerializeField] private float turretRotationMax = 120f;
     private float cannonRotation = 0f;
     private float cannonRotationSpeed = 0f;
     [SerializeField] private float cannonRotationSpeedMax = 25f;
     [SerializeField] private float cannonRotationAcceleration = 360f;
-    [SerializeField] private float cannonRotationMax_up = 40f;
+    [SerializeField] private float cannonRotationMax_up = 80f;
     [SerializeField] private float cannonRotationMax_down = 10f;
-    [SerializeField] private float cannonVelocity = 2500f;
+    [SerializeField] private float cannonVelocity = 4000f;
     [SerializeField] private float cannonAccuracy = 1.25f;
     [SerializeField] private float cannonGravity = 10f;
     private float cannonReload = 0f;
     [SerializeField] private float cannonReloadLength = 3.8f;
-    [SerializeField] private float cannonDamage = 1f;
+    [SerializeField] private float cannonDamage = 10f;
     [SerializeField] private float cannonTrailLifetime = 3f;
     [SerializeField] private float cannonMaxLifetime = 12f;
     private bool onTarget = false;
@@ -76,21 +76,29 @@ public class ShipTurret : MonoBehaviour
     {
         if (cannonReload == 0f)
         {
+            /*cannonReload = cannonReloadLength;
+            GameObject shell = Instantiate(shellPrefab, cannon.transform.position, Quaternion.LookRotation((aimPoint - cannon.transform.position).normalized, Vector3.up));
+            Quaternion randomRotation = Quaternion.Euler(Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f, Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f, Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f);
+            shell.GetComponent<ShellController>().Setup(randomRotation * (aimPoint - cannon.transform.position).normalized * cannonVelocity, cannonGravity, playerMask, cannonDamage, cannonTrailLifetime, cannonMaxLifetime, transform.root.gameObject, transform.root.GetComponent<ClientMaster>().GetIsLocalPlayer());
+
+            // Networking
+            transform.root.GetComponent<ClientMaster>().CmdHardFireCannon(playerMask, cannon.transform.position, Quaternion.LookRotation((aimPoint - cannon.transform.position).normalized, Vector3.up), randomRotation * (aimPoint - cannon.transform.position).normalized * cannonVelocity);*/
+
             cannonReload = cannonReloadLength;
             GameObject shell = Instantiate(shellPrefab, cannon.transform.position, cannon.transform.rotation);
             Quaternion randomRotation = Quaternion.Euler(Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f, Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f, Random.Range(0f, cannonAccuracy) - cannonAccuracy * 0.5f);
-            shell.GetComponent<ShellController>().Setup(randomRotation * cannonPivot.transform.forward * cannonVelocity, cannonGravity, playerMask, cannonDamage, cannonTrailLifetime, cannonMaxLifetime);
+            shell.GetComponent<ShellController>().Setup(randomRotation * cannonPivot.transform.forward * cannonVelocity, cannonGravity, playerMask, cannonDamage, cannonTrailLifetime, cannonMaxLifetime, transform.root.gameObject, transform.root.GetComponent<ClientMaster>().GetIsLocalPlayer());
 
             // Networking
             transform.root.GetComponent<ClientMaster>().CmdHardFireCannon(playerMask, cannon.transform.position, cannon.transform.rotation, randomRotation * cannonPivot.transform.forward * cannonVelocity);
-            Debug.Log("Send Cannon Fired");
+
         }
     }
 
     public void HardFireCannon(int playerMask, Vector3 pos, Quaternion rot, Vector3 vel)
     {
         GameObject shell = Instantiate(shellPrefab, pos, rot);
-        shell.GetComponent<ShellController>().Setup(vel, cannonGravity, playerMask, cannonDamage, cannonTrailLifetime, cannonMaxLifetime);
+        shell.GetComponent<ShellController>().Setup(vel, cannonGravity, playerMask, cannonDamage, cannonTrailLifetime, cannonMaxLifetime, transform.root.gameObject, transform.root.GetComponent<ClientMaster>().GetIsLocalPlayer());
     }
 
     public Vector3 GetAimPoint()

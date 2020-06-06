@@ -1,5 +1,140 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &269014463799452140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6706347850490404104}
+  - component: {fileID: 7778817005492284165}
+  m_Layer: 9
+  m_Name: Kaiju Weakspot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6706347850490404104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269014463799452140}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6263951994937951847}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &7778817005492284165
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 269014463799452140}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 45
+  m_Height: 90
+  m_Direction: 1
+  m_Center: {x: 0, y: 195, z: -10}
+--- !u!1 &846035240247405080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8411841983331766755}
+  - component: {fileID: 4598686701998036991}
+  - component: {fileID: 4612290987438876922}
+  - component: {fileID: 1879107609552498758}
+  - component: {fileID: 4917301747742730990}
+  m_Layer: 9
+  m_Name: Kaiju Collision
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8411841983331766755
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846035240247405080}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6263951994937951847}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4598686701998036991
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846035240247405080}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 110
+  m_Height: 380
+  m_Direction: 1
+  m_Center: {x: 0, y: 10, z: 0}
+--- !u!136 &4612290987438876922
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846035240247405080}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 60
+  m_Height: 160
+  m_Direction: 2
+  m_Center: {x: 0, y: 205, z: 60}
+--- !u!54 &1879107609552498758
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846035240247405080}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!114 &4917301747742730990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846035240247405080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 488af807083373345adbddde2add6119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1543359439249919790
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +226,7 @@ GameObject:
   - component: {fileID: 1410950393447904603}
   - component: {fileID: 7984800051025661805}
   - component: {fileID: 4463977884572988308}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Kaiju
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +241,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2724653794326349640}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -30, z: 90}
+  m_LocalPosition: {x: 0, y: -30, z: 120}
   m_LocalScale: {x: 42, y: 42, z: 42}
   m_Children: []
   m_Father: {fileID: 6263951994937951847}
@@ -139,6 +274,85 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: c01014fe83ebcba40910c34938495383, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &3136408984837357073
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2224222759424079920}
+  - component: {fileID: 3012382446940860606}
+  - component: {fileID: 7137747298150868272}
+  m_Layer: 9
+  m_Name: Kaiju Weakspot Visual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2224222759424079920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3136408984837357073}
+  m_LocalRotation: {x: 0.2588191, y: -0, z: -0, w: 0.9659258}
+  m_LocalPosition: {x: 0, y: 200, z: -30}
+  m_LocalScale: {x: 60, y: 80, z: 40}
+  m_Children: []
+  m_Father: {fileID: 6263951994937951847}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+--- !u!33 &3012382446940860606
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3136408984837357073}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &7137747298150868272
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3136408984837357073}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: e182cf852918675438136131ddc3263e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -285,18 +499,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shellPrefab: {fileID: 6387050196501215142, guid: f09c34f564a3b2e4797034f29cc45a75,
     type: 3}
-  turretRotationSpeedMax: 75
-  turretRotationAcceleration: 360
+  turretRotationSpeedMax: 270
+  turretRotationAcceleration: 540
   turretRotationMax: 120
   cannonRotationSpeedMax: 25
   cannonRotationAcceleration: 360
-  cannonRotationMax_up: 40
+  cannonRotationMax_up: 80
   cannonRotationMax_down: 10
-  cannonVelocity: 2500
+  cannonVelocity: 4000
   cannonAccuracy: 1.25
   cannonGravity: 0
   cannonReloadLength: 3.8
-  cannonDamage: 1
+  cannonDamage: 10
   cannonTrailLifetime: 3
   cannonMaxLifetime: 12
 --- !u!1 &6263951994263744561
@@ -310,7 +524,7 @@ GameObject:
   - component: {fileID: 6263951994263744560}
   - component: {fileID: 5625237857315434191}
   - component: {fileID: 5848331205688125948}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Kaiju
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +575,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 213fbda925a22994ea8343bfb870f846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  kaijuHealth: 1000
   kaijuSurfAcc: 65
   kaijuSurfSpeedMax: 100
   kaijuSubAcc: 240
@@ -375,8 +588,6 @@ MonoBehaviour:
   submergedOffsetMax: 300
   submergedForwardPriority: 0.35
   submergedCooldownMax: 10
-  icebergPrefab: {fileID: 2770713793817203849, guid: b60a7b04dd4b8314b9430b003df5bb8f,
-    type: 3}
   icebeamTimeMax: 4
   icebeamStepLength: 80
   icebeamLengthMax: 1200
@@ -573,6 +784,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6263951994843825935}
+  - component: {fileID: 6174376653729727623}
+  - component: {fileID: 6919298304699384957}
+  - component: {fileID: 5503837593764183140}
+  - component: {fileID: 4990596291420036154}
   m_Layer: 8
   m_Name: Ship Body
   m_TagString: Untagged
@@ -596,6 +811,62 @@ Transform:
   m_Father: {fileID: 6263951994879611032}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &6174376653729727623
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6263951994843824368}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 25
+  m_Height: 130
+  m_Direction: 2
+  m_Center: {x: 0, y: 4, z: -30}
+--- !u!136 &6919298304699384957
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6263951994843824368}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 10
+  m_Height: 80
+  m_Direction: 2
+  m_Center: {x: 0, y: 4, z: 55}
+--- !u!54 &5503837593764183140
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6263951994843824368}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!114 &4990596291420036154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6263951994843824368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 397995def4e8a9645850bbed3ac0353f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6263951994874821965
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,7 +879,7 @@ GameObject:
   - component: {fileID: 6263951994874821962}
   - component: {fileID: 6263951994874821963}
   - component: {fileID: 6263951994874821961}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Kaiju Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -743,7 +1014,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6263951994937951847}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Kaiju Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -763,6 +1034,9 @@ Transform:
   m_Children:
   - {fileID: 6263951995543122577}
   - {fileID: 1410950393447904603}
+  - {fileID: 2224222759424079920}
+  - {fileID: 6706347850490404104}
+  - {fileID: 8411841983331766755}
   m_Father: {fileID: 6263951994263744560}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -854,7 +1128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6263951994992729617}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Camera Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -968,6 +1242,8 @@ MonoBehaviour:
   playerCameras:
   - {fileID: 6263951994874821965}
   - {fileID: 6263951995668609952}
+  icebergMasterPrefab: {fileID: 7985311457500208369, guid: e7fa713957d059b4aa0e5b7c22a9550c,
+    type: 3}
 --- !u!1 &6263951995397024302
 GameObject:
   m_ObjectHideFlags: 0
@@ -1015,7 +1291,7 @@ GameObject:
   - component: {fileID: 6263951995543122607}
   - component: {fileID: 6263951995543122576}
   - component: {fileID: 6263951995543122605}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Slash
   m_TagString: Untagged
   m_Icon: {fileID: 0}

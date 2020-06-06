@@ -44,8 +44,13 @@ public class ShipCore : MonoBehaviour
         rotation += rudder * RudderEffectiveness(speed, rudderMaxEffectSpeed) * Time.deltaTime;
         shipPivot.transform.rotation = Quaternion.Euler(0f, rotation, Mathf.Clamp(rudder * Mathf.Abs(RudderEffectiveness(speed, rudderMaxEffectSpeed) * (speed / speedMaxFwd)) * 0.45f, -7.2f, 7.2f));
         transform.position += shipPivot.transform.forward * speed * Time.deltaTime;
-    }
 
+        if (transform.position.y != 0f)
+        {
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+        }
+    }
+    
     public void Damage(float damage)
     {
         health -= damage;

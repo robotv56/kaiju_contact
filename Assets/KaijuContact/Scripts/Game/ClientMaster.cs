@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using Crest;
 
@@ -13,6 +14,11 @@ public enum ShipWeapon
 
 public class ClientMaster : NetworkBehaviour
 {
+    [SyncVar] float kaijuHealth;
+    [SyncVar] float shipHealth;
+
+    private Text healthUI;
+
     [SyncVar] bool isKaiju;
     [SyncVar] ShipWeapon shipWeapon = ShipWeapon.GAUSS;
     [SerializeField] private GameObject[] shipWeapons = { null, null, null };
@@ -33,6 +39,8 @@ public class ClientMaster : NetworkBehaviour
     [SyncVar] Vector3 playerDesiredMovement;
     [SyncVar] Vector3 playerKaijuMovement;
     [SyncVar] float playerSubmerged;
+    [SyncVar] int playerSlashCount = 0;
+    private int slashCount = 0;
     // Ship
     [SyncVar] float playerRudder;
     [SyncVar] float playerActualRudder;
@@ -48,19 +56,35 @@ public class ClientMaster : NetworkBehaviour
     [SyncVar] Quaternion lastShotRotation;
     [SyncVar] Vector3 lastShotVelocity;
 
+    [SerializeField] private GameObject icebergMasterPrefab;
+
     private void Start()
     {
+        CmdResetHealth();
+        if (isLocalPlayer)
+        {
+            healthUI = GameObject.Find("Canvas").transform.Find("Health UI").GetComponent<Text>();
+        }
+        if (isLocalPlayer && isServer)
+        {
+            NetworkServer.SpawnWithClientAuthority(Instantiate(icebergMasterPrefab, Vector3.zero, Quaternion.identity), connectionToClient);
+            //NetworkServer.Configure(Network.ConnectionConfig)
+        }
         kaijuCore = playerObjects[0].GetComponent<KaijuCore>();
         shipCore = playerObjects[1].GetComponent<ShipCore>();
         shipTurret = playerObjects[1].transform.Find("Ship Pivot").Find("Ship Body").Find("Turret Base").Find("Turret Horizontal").GetComponent<ShipTurret>();
         kaijuController = playerObjects[0].GetComponent<PlayerKaijuController>();
         shipController = playerObjects[1].GetComponent<PlayerShipController>();
-
         isKaiju = false;
     }
 
     private void Update()
     {
+        if (isLocalPlayer && Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         // Set Active Weapon
         if (shipWeapon == ShipWeapon.GAUSS && (!shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
         {
@@ -128,139 +152,146 @@ public class ClientMaster : NetworkBehaviour
         {
             shipController.isLocal = isLocalPlayer;
         }
+        int k = 0;
+        if (!isKaiju)
+        {
+            k = 1;
+        }
+        if (isLocalPlayer)
+        {
+            CmdUpdatePlayer(
+                playerObjects[k].transform.position,
+                kaijuCore.GetDesiredRotation(),
+                kaijuCore.GetRotation(),
+                kaijuCore.GetDesiredMovement(),
+                kaijuCore.GetMovement(),
+                kaijuCore.GetSubmerged(),
+                shipCore.GetRudder(),
+                shipCore.GetActualRudder(),
+                shipCore.GetRotation(),
+                shipCore.GetThrottle(),
+                shipCore.GetSpeed(),
+                shipTurret.GetAimPoint(),
+                shipTurret.GetTargetVelocity()
+                );
+        }
+        else
+        {
+            playerObjects[k].transform.position = playerPosition;
+            kaijuCore.SetDesiredRotation(playerDesiredRotation);
+            kaijuCore.HardSetRotation(playerKaijuRotation);
+            kaijuCore.SetDesiredMovement(playerDesiredMovement);
+            kaijuCore.HardSetMovement(playerKaijuMovement);
+            kaijuCore.HardSetSubmerged(playerSubmerged);
+            shipCore.SetRudder(playerRudder);
+            shipCore.HardSetRudder(playerActualRudder);
+            shipCore.HardSetRotation(playerShipRotation);
+            shipCore.SetThrottle(playerThrottle);
+            shipCore.HardSetSpeed(playerShipSpeed);
+            shipTurret.UpdateAim(playerAimPoint, playerTargetVelocity);
+            if (playerSlashCount > slashCount)
+            {
+                slashCount = playerSlashCount;
+                kaijuCore.HardTriggerSlash();
+            }
+            if (playerShotsFired > shotsFired)
+            {
+                shotsFired = playerShotsFired;
+                shipTurret.HardFireCannon(lastShotMask, lastShotPosition, lastShotRotation, lastShotVelocity);
+            }
+        }
+
         if (isLocalPlayer)
         {
             if (isKaiju)
             {
-                CmdUpdatePosition(playerObjects[0].transform.position);
-                CmdUpdateDesiredRotation(kaijuCore.GetDesiredRotation());
-                CmdUpdateKaijuRotation(kaijuCore.GetRotation());
-                CmdUpdateDesiredMovement(kaijuCore.GetDesiredMovement());
-                CmdUpdateKaijuMovement(kaijuCore.GetMovement());
-                CmdUpdateSubmerge(kaijuCore.GetSubmerged());
+                healthUI.text = "Health: " + kaijuHealth;
             }
             else
             {
-                CmdUpdatePosition(playerObjects[1].transform.position);
-                CmdUpdateRudder(shipCore.GetRudder());
-                CmdUpdateActualRudder(shipCore.GetActualRudder());
-                CmdUpdateShipRotation(shipCore.GetRotation());
-                CmdUpdateThrottle(shipCore.GetThrottle());
-                CmdUpdateShipSpeed(shipCore.GetSpeed());
-                CmdUpdateAimPoint(shipTurret.GetAimPoint(), shipTurret.GetTargetVelocity());
+                healthUI.text = "Health: " + shipHealth;
             }
+        }
+
+        /*if (transform.Find("Kaiju").Find("Kaiju Pivot").gameObject.activeSelf != (kaijuHealth > 0f && isKaiju))
+        {
+            transform.Find("Kaiju").Find("Kaiju Pivot").gameObject.SetActive(kaijuHealth > 0f && isKaiju);
+        }
+        if (transform.Find("Ship").Find("Ship Pivot").gameObject.activeSelf != (shipHealth > 0f && !isKaiju))
+        {
+            transform.Find("Ship").Find("Ship Pivot").gameObject.SetActive(kaijuHealth > 0f && !isKaiju);
+        }*/
+    }
+
+    private void UpdatePlayer(Vector3 pos, float kdr, float kr, Vector3 kdm, Vector3 km, float ks, float srud, float sarud, float sr, float st, float ss, Vector3 sap, Vector3 stv)
+    {
+        if (isServer)
+        {
+            RpcUpdatePlayer(pos, kdr, kr, kdm, km, ks, srud, sarud, sr, st, ss, sap, stv);
         }
         else
         {
-            if (isKaiju)
-            {
-                playerObjects[0].transform.position = playerPosition;
-                kaijuCore.SetDesiredRotation(playerDesiredRotation);
-                kaijuCore.HardSetRotation(playerKaijuRotation);
-                kaijuCore.SetDesiredMovement(playerDesiredMovement);
-                kaijuCore.HardSetMovement(playerKaijuMovement);
-                kaijuCore.HardSetSubmerged(playerSubmerged);
-            }
-            else
-            {
-                playerObjects[1].transform.position = playerPosition;
-                shipCore.SetRudder(playerRudder);
-                shipCore.HardSetRudder(playerActualRudder);
-                shipCore.HardSetRotation(playerShipRotation);
-                shipCore.SetThrottle(playerThrottle);
-                shipCore.HardSetSpeed(playerShipSpeed);
-                shipTurret.UpdateAim(playerAimPoint, playerTargetVelocity);
-
-                if (playerShotsFired > shotsFired)
-                {
-                    shotsFired = playerShotsFired;
-                    shipTurret.HardFireCannon(lastShotMask, lastShotPosition, lastShotRotation, lastShotVelocity);
-                    Debug.Log("Fired Clientside");
-                }
-            }
+            CmdUpdatePlayer(pos, kdr, kr, kdm, km, ks, srud, sarud, sr, st, ss, sap, stv);
         }
     }
 
     [Command(channel = 1)]
-    private void CmdUpdatePosition(Vector3 pos)
+    private void CmdUpdatePlayer(Vector3 pos, float kdr, float kr, Vector3 kdm, Vector3 km, float ks, float srud, float sarud, float sr, float st, float ss, Vector3 sap, Vector3 stv)
     {
         playerPosition = pos;
+        playerDesiredRotation = kdr;
+        playerKaijuRotation = kr;
+        playerDesiredMovement = kdm;
+        playerKaijuMovement = km;
+        playerSubmerged = ks;
+        playerRudder = srud;
+        playerActualRudder = sarud;
+        playerShipRotation = sr;
+        playerThrottle = st;
+        playerShipSpeed = ss;
+        playerAimPoint = sap;
+        playerTargetVelocity = stv;
+        RpcUpdatePlayer(pos, kdr, kr, kdm, km, ks, srud, sarud, sr, st, ss, sap, stv);
     }
 
-    [Command(channel = 1)]
-    private void CmdUpdateDesiredRotation(float desiredRotation)
+    [ClientRpc(channel = 1)]
+    private void RpcUpdatePlayer(Vector3 pos, float kdr, float kr, Vector3 kdm, Vector3 km, float ks, float srud, float sarud, float sr, float st, float ss, Vector3 sap, Vector3 stv)
     {
-        playerDesiredRotation = desiredRotation;
+        playerPosition = pos;
+        playerDesiredRotation = kdr;
+        playerKaijuRotation = kr;
+        playerDesiredMovement = kdm;
+        playerKaijuMovement = km;
+        playerSubmerged = ks;
+        playerRudder = srud;
+        playerActualRudder = sarud;
+        playerShipRotation = sr;
+        playerThrottle = st;
+        playerShipSpeed = ss;
+        playerAimPoint = sap;
+        playerTargetVelocity = stv;
     }
 
-    [Command(channel = 1)]
-    private void CmdUpdateKaijuRotation(float rotation)
+    [Command]
+    public void CmdTriggerCreateIceberg(float x, float z)
     {
-        playerKaijuRotation = rotation;
+        GameObject.Find("IcebergMaster").GetComponent<IcebergMaster>().CreateIceberg(x, z);
     }
 
-    [Command(channel = 1)]
-    private void CmdUpdateDesiredMovement(Vector3 desiredMovement)
+    [Command]
+    public void CmdTriggerDamageIceberg(int icebergID, float damage)
     {
-        playerDesiredMovement = desiredMovement;
-    }
-
-    [Command(channel = 1)]
-    private void CmdUpdateKaijuMovement(Vector3 movement)
-    {
-        playerKaijuMovement = movement;
-    }
-
-    [Command(channel = 1)]
-    public void CmdUpdateSubmerge(float submerged)
-    {
-        playerSubmerged = submerged;
+        GameObject.Find("IcebergMaster").GetComponent<IcebergMaster>().DamageIceberg(icebergID, damage);
     }
 
     [Command]
     public void CmdTriggerSlash()
     {
-        if (!isLocalPlayer)
+        playerSlashCount++;
+        if (isLocalPlayer)
         {
-            kaijuCore.HardTriggerSlash();
+            slashCount++;
         }
-    }
-
-    [Command(channel = 1)]
-    private void CmdUpdateRudder(float rudder)
-    {
-        playerRudder = rudder;
-    }
-
-    [Command(channel = 1)]
-    private void CmdUpdateActualRudder(float actualRudder)
-    {
-        playerActualRudder = actualRudder;
-    }
-
-    [Command(channel = 1)]
-    private void CmdUpdateShipRotation(float rotation)
-    {
-        playerShipRotation = rotation;
-    }
-
-    [Command(channel = 1)]
-    private void CmdUpdateThrottle(float throttle)
-    {
-        playerThrottle = throttle;
-    }
-
-    [Command(channel = 1)]
-    private void CmdUpdateShipSpeed(float speed)
-    {
-        playerShipSpeed = speed;
-    }
-
-    [Command(channel = 1)]
-    private void CmdUpdateAimPoint(Vector3 aimPoint, Vector3 targetVelocity)
-    {
-        playerAimPoint = aimPoint;
-        playerTargetVelocity = targetVelocity;
     }
 
     [Command]
@@ -281,10 +312,34 @@ public class ClientMaster : NetworkBehaviour
     public void CmdSetKaiju()
     {
         isKaiju = !isKaiju;
+        CmdResetHealth();
     }
 
-    public void SetShipWeapon(ShipWeapon selection)
+    [Command]
+    public void CmdSetShipWeapon(ShipWeapon selection)
     {
         shipWeapon = selection;
+    }
+
+    public bool GetIsLocalPlayer()
+    {
+        return isLocalPlayer;
+    }
+
+    [Command]
+    private void CmdResetHealth()
+    {
+        kaijuHealth = 250f;
+        shipHealth = 50f;
+    }
+
+    public void CmdDamageKaiju(float damage)
+    {
+        kaijuHealth = Mathf.Clamp(kaijuHealth - damage, 0f, kaijuHealth);
+    }
+
+    public void CmdDamageShip(float damage)
+    {
+        shipHealth = Mathf.Clamp(shipHealth - damage, 0f, shipHealth);
     }
 }

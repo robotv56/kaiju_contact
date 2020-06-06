@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using XboxCtrlrInput;
 using UnityEngine.UI;
+using XboxCtrlrInput;
 using UnityEngine.SceneManagement;
 
 public enum PlayerInput
@@ -27,10 +27,7 @@ public class PlayerShipController : MonoBehaviour
     [SerializeField] private float cameraMaxY_up = 15f;
     [SerializeField] private float cameraMaxY_down = 30f;
     private int playerMask = (1 << 9) + (1 << 10) + (1 << 11);
-    private Text healthUI;
-    //[SerializeField] private Text scoreUI;
     private Image crosshair;
-    //private int score = 0;
 
     public bool isLocal;
 
@@ -40,9 +37,7 @@ public class PlayerShipController : MonoBehaviour
         turret = transform.Find("Ship Pivot").Find("Ship Body").Find("Turret Base").Find("Turret Horizontal").GetComponent<ShipTurret>();
         cameraPivot = transform.Find("Camera Pivot").gameObject;
         mainCamera = cameraPivot.transform.Find("Ship Camera").GetComponent<Camera>();
-        GameObject UI = GameObject.Find("Canvas");
-        healthUI = UI.transform.Find("Health UI").GetComponent<Text>();
-        crosshair = UI.transform.Find("Crosshair").GetComponent<Image>();
+        crosshair = GameObject.Find("Canvas").transform.Find("Crosshair").GetComponent<Image>();
     }
     
     private void Update()
@@ -95,9 +90,11 @@ public class PlayerShipController : MonoBehaviour
                 //Debug.Log("Raycast hit: " + aimHit.transform.name);
                 if (aimHit.transform.gameObject.layer == 9 || aimHit.transform.gameObject.layer == 13)
                 {
-                    ShipCore enemy = aimHit.transform.root.gameObject.GetComponent<ShipCore>();
-                    turret.UpdateAim(enemy.transform.position + Quaternion.Euler(0f, enemy.transform.Find("Ship Pivot").eulerAngles.y, 0f) * new Vector3(0f, 0.25f, -0.65f), enemy.GetVelocity());
-                    Vector3 point = enemy.transform.position + Quaternion.Euler(0f, enemy.transform.Find("Ship Pivot").eulerAngles.y, 0f) * new Vector3(0f, 0.25f, -0.65f);
+                    KaijuCore enemy = aimHit.transform.root.Find("Kaiju").GetComponent<KaijuCore>();
+                    //turret.UpdateAim(enemy.transform.position + Quaternion.Euler(0f, enemy.transform.Find("Ship Pivot").eulerAngles.y, 0f) * new Vector3(0f, 0.25f, -0.65f), enemy.GetMovement());//enemy.GetVelocity());
+                    turret.UpdateAim(aimHit.point, enemy.GetMovement());
+                    //Vector3 point = enemy.transform.position + Quaternion.Euler(0f, enemy.transform.Find("Ship Pivot").eulerAngles.y, 0f) * new Vector3(0f, 0.25f, -0.65f);
+                    Vector3 point = aimHit.point;
                     Debug.DrawLine(point, turret.transform.position, Color.red);
                     crosshair.color = new Color(1f, 0.25f, 0f, 0.65f);
                 }
@@ -117,8 +114,6 @@ public class PlayerShipController : MonoBehaviour
                 turret.UpdateAim(targetPointTemp, Vector3.zero);
                 crosshair.color = new Color(0.75f, 0.75f, 0.75f, 0.50f);
             }
-
-            healthUI.text = "Health: " + core.GetHealth();
         }
         
         //scoreUI.text = "Score: " + score;

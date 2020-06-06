@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class KaijuCore : MonoBehaviour
 {
-    [SerializeField] private float kaijuHealth = 1000f;
     private GameObject kaijuPivot;
     private Vector3 kaijuDesiredMovement;
     private Vector3 kaijuMovement;
@@ -29,9 +28,8 @@ public class KaijuCore : MonoBehaviour
     [SerializeField] private float submergedCooldownMax = 10f;
     private bool icebeam = false;
     private Vector3 icebeamPoint;
-    private GameObject[] icebergs;
+    private Vector3[] icebergs;
     private int icebergsSpawned = 0;
-    [SerializeField] private GameObject icebergPrefab;
     private float icebeamTime = 0f;
     private float icebeamCooldown = 0f;
     [SerializeField] private float icebeamTimeMax = 4f;
@@ -112,14 +110,14 @@ public class KaijuCore : MonoBehaviour
             bool pointClear = true;
             for (int i = 0; i < icebergsSpawned; i++)
             {
-                if ((icebergs[i].transform.position - icebeamPoint).magnitude < icebeamStepLength)
+                if ((icebergs[i] - icebeamPoint).magnitude < icebeamStepLength)
                 {
                     pointClear = false;
                 }
             }
             if (pointClear)
             {
-                icebergs[icebergsSpawned] = SpawnIceberg((icebergs[icebergsSpawned - 1].transform.position + (icebeamPoint - icebergs[icebergsSpawned - 1].transform.position).normalized * icebeamStepLength));
+                icebergs[icebergsSpawned] = SpawnIceberg((icebergs[icebergsSpawned - 1] + (icebeamPoint - icebergs[icebergsSpawned - 1]).normalized * icebeamStepLength));
                 icebergsSpawned++;
             }
             icebeamTime = Mathf.Clamp(icebeamTime - Time.deltaTime, 0f, icebeamTimeMax);
@@ -261,7 +259,7 @@ public class KaijuCore : MonoBehaviour
     {
         if (icebeamTime == 0f && icebeamCooldown == 0f && !FullySubmerged() && Mathf.Abs(RotateDifference(kaijuRotation, kaijuDesiredRotation)) < 75f)
         {
-            icebergs = new GameObject[Mathf.CeilToInt(icebeamLengthMax / icebeamStepLength)];
+            icebergs = new Vector3[Mathf.CeilToInt(icebeamLengthMax / icebeamStepLength)];
             icebergs[0] = SpawnIceberg(icebeamPoint);
             icebergsSpawned = 1;
             icebeamTime = icebeamTimeMax;
@@ -279,9 +277,10 @@ public class KaijuCore : MonoBehaviour
     {
         return icebeamRangeMax;
     }
-    private GameObject SpawnIceberg(Vector3 position)
+    private Vector3 SpawnIceberg(Vector3 position)
     {
-        return Instantiate<GameObject>(icebergPrefab, position, Quaternion.Euler(0f, Random.value * 360f, 0f));
+        transform.parent.GetComponent<ClientMaster>().CmdTriggerCreateIceberg(position.x, position.z);
+        return position;
     }
 
     //Returns a Vector2 containing the changed value and the changed speed.
