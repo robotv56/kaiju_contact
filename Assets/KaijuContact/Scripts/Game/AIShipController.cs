@@ -6,7 +6,7 @@ public class AIShipController : MonoBehaviour {
 
     GameMaster gameMaster;
 
-    [SerializeField] bool hostileToPlayer = true;
+    //[SerializeField] bool hostileToPlayer = true;
     private GameObject player;
     private ShipCore core;
     private ShipTurret turret;

@@ -6,6 +6,10 @@ using UnityEngine.Networking;
 using Crest;
 using static GlobalVars;
 
+//disable deprecation warnings
+#pragma warning disable CS0414
+#pragma warning disable CS0618
+
 public class ClientMaster : NetworkBehaviour
 {
     [SyncVar] float kaijuHealth;
@@ -14,7 +18,7 @@ public class ClientMaster : NetworkBehaviour
     private Text healthUI;
 
     [SyncVar] bool isKaiju;
-    [SyncVar] GlobalVars.Weapons shipWeapon = GlobalVars.Weapons.RAILGUN;
+    [SyncVar] Weapons shipWeapon = Weapons.RAILGUN;
     [SerializeField] private GameObject[] shipWeapons = { null, null, null };
     [SerializeField] private GameObject[] playerObjects = { null, null };
     [SerializeField] private GameObject[] playerPivots = { null, null };
@@ -52,41 +56,70 @@ public class ClientMaster : NetworkBehaviour
     [SyncVar] Quaternion lastShotRotation;
     [SyncVar] Vector3 lastShotVelocity;
 
-    private GameObject gameObjectCache;//used for storing gameobjects locally, helps save memory
+    //used for storing gameobjects locally, helps save memory
+    //is VOLATILE, it will often switch to reference different things, only use locally
+    private GameObject gameObjectCache;
+    private bool hasStarted = false;//used for starting camera
+    private GameObject kaijuTracker;
 
     [SerializeField] private GameObject icebergMasterPrefab;
 
     private void Start()
     {
+        Debug.Log(0);
         CmdResetHealth();
         if (isLocalPlayer)
         {
-            healthUI = GameObject.Find("Canvas").transform.Find("Health UI").GetComponent<Text>();
+            if(globalGameObjects.TryGetValue("canvas", out gameObjectCache))
+            {
+                //TODO ui
+                healthUI = gameObjectCache.transform.Find("Health UI").GetComponent<Text>();
+            }
+            else
+            {
+                Debug.LogError("Could not find canvas");
+            }
+            Debug.Log(1);
         }
         if (isLocalPlayer && isServer)
         {
+            Debug.Log(2);
             NetworkServer.SpawnWithClientAuthority(Instantiate(icebergMasterPrefab, Vector3.zero, Quaternion.identity), connectionToClient);
-            GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().customConfig = true;
-            GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageSize = 248;
-            GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageCount = 248;
-            GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxSentMessageQueueSize = 248;
+            //GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().customConfig = true;
+            //GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageSize = 248;
+            //GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageCount = 248;
+            //GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxSentMessageQueueSize = 248;
+
+            //setting cache here
+            if(globalGameObjects.TryGetValue("multiplayer_manager", out gameObjectCache))
+            {
+                gameObjectCache.GetComponent<NetworkManager>().customConfig = true;
+                gameObjectCache.GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageSize = 248;
+                gameObjectCache.GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageCount = 248;
+                gameObjectCache.GetComponent<NetworkManager>().connectionConfig.MaxSentMessageQueueSize = 248;
+            }
+            else
+            {
+                Debug.LogError("Could not find Multiplayer Manager");
+            }
+
             //NetworkServer.Configure(Network.ConnectionConfig)
         }
+        Debug.Log(3);
         kaijuCore = playerObjects[0].GetComponent<KaijuCore>();
         shipCore = playerObjects[1].GetComponent<ShipCore>();
-        shipTurret = playerObjects[1].transform.Find("Ship Pivot").Find("Ship Body").Find("Turret Base").Find("Turret Horizontal").GetComponent<ShipTurret>();
+        shipTurret = playerObjects[1].transform.Find("Ship Pivot/Ship Body/Turret Base/Turret Horizontal").GetComponent<ShipTurret>();
         kaijuController = playerObjects[0].GetComponent<PlayerKaijuController>();
         shipController = playerObjects[1].GetComponent<PlayerShipController>();
+        Debug.Log(playerObjects[1]);
+        Debug.Log(shipController);
+        Debug.Log(4);
         isKaiju = false;
+        globalGameObjects.TryGetValue("kaiju_tracker", out kaijuTracker);
     }
 
     private void Update()
     {
-        if (isLocalPlayer && Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
         // Set Active Weapon
         if (shipWeapon == Weapons.RAILGUN && (!shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
         {
@@ -112,6 +145,7 @@ public class ClientMaster : NetworkBehaviour
         {
             playerObjects[0].SetActive(true);
             playerObjects[1].SetActive(false);
+            globalGameObjects["kaiju_track_point"] = playerObjects[0].transform.Find("KaijuTrackPoint").gameObject;
         }
         if (!isKaiju && !playerObjects[1].activeSelf)
         {
@@ -126,7 +160,7 @@ public class ClientMaster : NetworkBehaviour
             playerCameras[1].SetActive(!isKaiju);
 
             //setting cache here
-            if (GlobalVars.globalGameObjects.TryGetValue("ocean", out gameObjectCache))
+            if (globalGameObjects.TryGetValue("ocean", out gameObjectCache))
             {
                 if (isKaiju)
                 {
@@ -137,12 +171,17 @@ public class ClientMaster : NetworkBehaviour
                     gameObjectCache.GetComponent<OceanRenderer>().Viewpoint = playerCameras[1].transform;
                 }
             }
-            else Debug.LogWarning("Couldnt find the ocean");
-            
+            else Debug.LogError("Could not find the ocean");
+
             //setting cache here
-            if (GlobalVars.globalGameObjects.TryGetValue("starting_camera", out gameObjectCache) && gameObjectCache.active)
+            if (globalGameObjects.TryGetValue("starting_camera", out gameObjectCache) && gameObjectCache.active)
             {
                 gameObjectCache.SetActive(false);
+                hasStarted = true;
+            }
+            else if(!hasStarted)
+            {
+                Debug.LogError("Could not find starting camera");
             }
         }
         else if (!isLocalPlayer && (playerCameras[0].activeSelf || playerCameras[1].activeSelf))
@@ -224,6 +263,19 @@ public class ClientMaster : NetworkBehaviour
             else
             {
                 healthUI.text = "Health: " + shipHealth;
+                //setting cache here
+                if(globalGameObjects.TryGetValue("kaiju_track_point", out gameObjectCache))
+                {
+                    var vect = playerCameras[1].GetComponent<Camera>().WorldToScreenPoint(gameObjectCache.transform.position);
+                    vect.z = 0;
+                    kaijuTracker.transform.position = vect;
+
+                    var r = kaijuTracker.GetComponent<RectTransform>();
+
+                    var distance = Vector3.Distance(gameObjectCache.transform.position, playerCameras[1].transform.position);
+
+                    r.sizeDelta = new Vector2(1000,1000) * (1/distance * 100 * (float)goldenRatio); 
+                }
             }
         }
 

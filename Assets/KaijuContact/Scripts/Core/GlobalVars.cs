@@ -29,4 +29,6 @@ public static class GlobalVars
 
     //populated by component isntances of AutoRegister.cs
     public static Dictionary<string, GameObject> globalGameObjects = new Dictionary<string, GameObject>();
+
+    public static double goldenRatio = 1.61803398874989484820458683436;
 }
