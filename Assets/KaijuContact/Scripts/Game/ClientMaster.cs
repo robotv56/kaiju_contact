@@ -253,12 +253,13 @@ public class ClientMaster : NetworkBehaviour
                 }
             }
         }
-
+        //UI control
         if (isLocalPlayer)
         {
             if (isKaiju)
             {
                 healthUI.text = "Health: " + kaijuHealth;
+                kaijuTracker.SetActive(false);
             }
             else
             {
@@ -266,7 +267,12 @@ public class ClientMaster : NetworkBehaviour
                 //setting cache here
                 if(globalGameObjects.TryGetValue("kaiju_track_point", out gameObjectCache))
                 {
+                    if(!kaijuTracker.active)
+                    {
+                        kaijuTracker.SetActive(true);
+                    }
                     var vect = playerCameras[1].GetComponent<Camera>().WorldToScreenPoint(gameObjectCache.transform.position);
+                    var z = vect.z;
                     vect.z = 0;
                     kaijuTracker.transform.position = vect;
 
@@ -274,7 +280,16 @@ public class ClientMaster : NetworkBehaviour
 
                     var distance = Vector3.Distance(gameObjectCache.transform.position, playerCameras[1].transform.position);
 
-                    r.sizeDelta = new Vector2(1000,1000) * (1/distance * 100 * (float)goldenRatio); 
+                    r.sizeDelta = new Vector2(1000,1000) * (1/distance * 100 * (float)goldenRatio);
+
+                    if(Mathf.Sign(z)<0)
+                    {
+                        kaijuTracker.GetComponent<Image>().enabled = false;
+                    }
+                    else
+                    {
+                        kaijuTracker.GetComponent<Image>().enabled = true;
+                    }
                 }
             }
         }
