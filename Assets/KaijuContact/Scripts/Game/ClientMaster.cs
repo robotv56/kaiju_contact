@@ -4,13 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using Crest;
-
-public enum ShipWeapon
-{
-    GAUSS,
-    LASER,
-    ROTARY
-}
+using static GlobalVars;
 
 public class ClientMaster : NetworkBehaviour
 {
@@ -20,7 +14,7 @@ public class ClientMaster : NetworkBehaviour
     private Text healthUI;
 
     [SyncVar] bool isKaiju;
-    [SyncVar] ShipWeapon shipWeapon = ShipWeapon.GAUSS;
+    [SyncVar] GlobalVars.Weapons shipWeapon = GlobalVars.Weapons.RAILGUN;
     [SerializeField] private GameObject[] shipWeapons = { null, null, null };
     [SerializeField] private GameObject[] playerObjects = { null, null };
     [SerializeField] private GameObject[] playerPivots = { null, null };
@@ -58,6 +52,8 @@ public class ClientMaster : NetworkBehaviour
     [SyncVar] Quaternion lastShotRotation;
     [SyncVar] Vector3 lastShotVelocity;
 
+    private GameObject gameObjectCache;//used for storing gameobjects locally, helps save memory
+
     [SerializeField] private GameObject icebergMasterPrefab;
 
     private void Start()
@@ -92,19 +88,19 @@ public class ClientMaster : NetworkBehaviour
         }
 
         // Set Active Weapon
-        if (shipWeapon == ShipWeapon.GAUSS && (!shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
+        if (shipWeapon == Weapons.RAILGUN && (!shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
         {
             shipWeapons[0].SetActive(true);
             shipWeapons[1].SetActive(false);
             shipWeapons[2].SetActive(false);
         }
-        if (shipWeapon == ShipWeapon.LASER && (shipWeapons[0].activeSelf || !shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
+        if (shipWeapon == Weapons.LASER && (shipWeapons[0].activeSelf || !shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
         {
             shipWeapons[0].SetActive(false);
             shipWeapons[1].SetActive(true);
             shipWeapons[2].SetActive(false);
         }
-        if (shipWeapon == ShipWeapon.ROTARY && (shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || !shipWeapons[2].activeSelf))
+        if (shipWeapon == Weapons.MINIGUN && (shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || !shipWeapons[2].activeSelf))
         {
             shipWeapons[0].SetActive(false);
             shipWeapons[1].SetActive(false);
@@ -129,18 +125,24 @@ public class ClientMaster : NetworkBehaviour
             playerCameras[0].SetActive(isKaiju);
             playerCameras[1].SetActive(!isKaiju);
 
-            if (isKaiju)
+            //setting cache here
+            if (GlobalVars.globalGameObjects.TryGetValue("ocean", out gameObjectCache))
             {
-                GameObject.Find("Ocean").GetComponent<OceanRenderer>().Viewpoint = playerCameras[0].transform;
+                if (isKaiju)
+                {
+                    gameObjectCache.GetComponent<OceanRenderer>().Viewpoint = playerCameras[0].transform;
+                }
+                else
+                {
+                    gameObjectCache.GetComponent<OceanRenderer>().Viewpoint = playerCameras[1].transform;
+                }
             }
-            else
+            else Debug.LogWarning("Couldnt find the ocean");
+            
+            //setting cache here
+            if (GlobalVars.globalGameObjects.TryGetValue("starting_camera", out gameObjectCache) && gameObjectCache.active)
             {
-                GameObject.Find("Ocean").GetComponent<OceanRenderer>().Viewpoint = playerCameras[1].transform;
-            }
-
-            if (GameObject.Find("Starting Camera"))
-            {
-                GameObject.Find("Starting Camera").SetActive(false);
+                gameObjectCache.SetActive(false);
             }
         }
         else if (!isLocalPlayer && (playerCameras[0].activeSelf || playerCameras[1].activeSelf))
@@ -328,7 +330,7 @@ public class ClientMaster : NetworkBehaviour
     }
 
     [Command]
-    public void CmdSetShipWeapon(ShipWeapon selection)
+    public void CmdSetShipWeapon(Weapons selection)
     {
         shipWeapon = selection;
     }
