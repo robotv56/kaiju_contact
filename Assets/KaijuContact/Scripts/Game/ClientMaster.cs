@@ -284,6 +284,7 @@ public class ClientMaster : NetworkBehaviour
 
                     if(Mathf.Sign(z)<0)
                     {
+                        //maybe have an onscreen indicator to show which way to turn
                         kaijuTracker.GetComponent<Image>().enabled = false;
                     }
                     else
