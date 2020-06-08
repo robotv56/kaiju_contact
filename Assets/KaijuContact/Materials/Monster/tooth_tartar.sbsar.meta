@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 10c757aece242c04b9e305df53987d3f
+guid: 06cde19dc84e64846adf9e74019dcad4
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,20 +11,14 @@ ScriptedImporter:
   version: 25
   projectContext: 0
   mGraphInstanceData:
-  - graphLabel: Lizard Skin
-    prototypeName: Lizard Skin
+  - graphLabel: Tooth Tartar
+    prototypeName: Tooth Tartar
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://lizard_skin\" label=\"\" >\n  <presetinput
-      identifier=\"$outputsize\" uid=\"3581906903\" type=\"8\" value=\"9,9\" />\n 
-      <presetinput identifier=\"scales_color\" uid=\"2693607710\" type=\"2\" value=\"0,0.141509,0.107879\"
-      />\n  <presetinput identifier=\"scales_color_variation\" uid=\"2693600425\"
-      type=\"2\" value=\"0,0.641509,0.508514\" />\n  <presetinput identifier=\"black_spots_color\"
-      uid=\"2694837165\" type=\"2\" value=\"0,0,0\" />\n  <presetinput identifier=\"scales_amount\"
-      uid=\"2693674358\" type=\"4\" value=\"200\" />\n  <presetinput identifier=\"scales_size_disorder\"
-      uid=\"2693066866\" type=\"0\" value=\"1\" />\n  <presetinput identifier=\"scales_position_random\"
-      uid=\"2694253627\" type=\"0\" value=\"0.5\" />\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://tooth_tartar\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"3921124941\" type=\"8\" value=\"9,9\" />\n
+      </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
@@ -32,7 +26,7 @@ ScriptedImporter:
       lightmapFlags: 4
       texEnvs:
       - name: _BumpMap
-        texture: {fileID: 1271719564573668774, guid: 10c757aece242c04b9e305df53987d3f,
+        texture: {fileID: 3370070525036151942, guid: 06cde19dc84e64846adf9e74019dcad4,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -53,22 +47,22 @@ ScriptedImporter:
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MainTex
-        texture: {fileID: 3552050855070010186, guid: 10c757aece242c04b9e305df53987d3f,
+        texture: {fileID: 5860029008183834232, guid: 06cde19dc84e64846adf9e74019dcad4,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
-        texture: {fileID: -8847932360821424632, guid: 10c757aece242c04b9e305df53987d3f,
+        texture: {fileID: 7789131531530399689, guid: 06cde19dc84e64846adf9e74019dcad4,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _OcclusionMap
-        texture: {fileID: 5097203779559714630, guid: 10c757aece242c04b9e305df53987d3f,
+        texture: {fileID: -4019989720692859142, guid: 06cde19dc84e64846adf9e74019dcad4,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _ParallaxMap
-        texture: {fileID: -2222042509762439607, guid: 10c757aece242c04b9e305df53987d3f,
+        texture: {fileID: -1668150839384567397, guid: 06cde19dc84e64846adf9e74019dcad4,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -174,30 +168,12 @@ ScriptedImporter:
       bImage: 1
       bNumerical: 0
       bLinear: 1
-    - outputName: specularLevel
-      identifier: specularlevel
-      usageName: specularLevel
-      channelStr: specularLevel
-      label: Specular Level
-      usage: 12
-      bImage: 1
-      bNumerical: 0
-      bLinear: 1
     - outputName: height
       identifier: height
       usageName: height
       channelStr: height
       label: Height
       usage: 9
-      bImage: 1
-      bNumerical: 0
-      bLinear: 1
-    - outputName: scattering
-      identifier: scattering
-      usageName: scattering
-      channelStr: scattering
-      label: Scattering
-      usage: 28
       bImage: 1
       bNumerical: 0
       bLinear: 1
@@ -210,15 +186,33 @@ ScriptedImporter:
       bImage: 1
       bNumerical: 0
       bLinear: 1
+    - outputName: opacity
+      identifier: opacity
+      usageName: opacity
+      channelStr: opacity
+      label: Opacity
+      usage: 2
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
+    - outputName: scattering
+      identifier: scattering
+      usageName: scattering
+      channelStr: scattering
+      label: Scattering
+      usage: 28
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
     texturePackingList:
     - targetName: diffuse
       components:
-      - sourceName: diffuse
+      - sourceName: opacity
         from: 0
         to: 3
     - targetName: baseColor
       components:
-      - sourceName: baseColor
+      - sourceName: opacity
         from: 0
         to: 3
     - targetName: normal
@@ -246,19 +240,9 @@ ScriptedImporter:
       - sourceName: smoothness
         from: 0
         to: 3
-    - targetName: specularLevel
-      components:
-      - sourceName: specularLevel
-        from: 0
-        to: 3
     - targetName: height
       components:
       - sourceName: height
-        from: 0
-        to: 3
-    - targetName: scattering
-      components:
-      - sourceName: scattering
         from: 0
         to: 3
     - targetName: ambientOcclusion
@@ -266,48 +250,58 @@ ScriptedImporter:
       - sourceName: ambientOcclusion
         from: 0
         to: 3
+    - targetName: opacity
+      components:
+      - sourceName: opacity
+        from: 0
+        to: 3
+    - targetName: scattering
+      components:
+      - sourceName: scattering
+        from: 0
+        to: 3
     textureParameters:
-    - textureName: Lizard Skin - diffuse
+    - textureName: Tooth Tartar - diffuse
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - baseColor
+    - textureName: Tooth Tartar - baseColor
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - normal
+    - textureName: Tooth Tartar - normal
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - specular
+    - textureName: Tooth Tartar - specular
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - glossiness
+    - textureName: Tooth Tartar - glossiness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - roughness
+    - textureName: Tooth Tartar - roughness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - metallic
+    - textureName: Tooth Tartar - metallic
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - specularLevel
+    - textureName: Tooth Tartar - height
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - height
+    - textureName: Tooth Tartar - ambientOcclusion
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - scattering
+    - textureName: Tooth Tartar - opacity
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Lizard Skin - ambientOcclusion
+    - textureName: Tooth Tartar - scattering
       wrapMode: 0
       filterMode: 1
       aniso: 1
@@ -322,11 +316,11 @@ ScriptedImporter:
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1
-    material: {fileID: -6755400208299025326, guid: 10c757aece242c04b9e305df53987d3f,
+    material: {fileID: -6143902810893859342, guid: 06cde19dc84e64846adf9e74019dcad4,
       type: 3}
     generatedTextures:
-    - {fileID: 3552050855070010186, guid: 10c757aece242c04b9e305df53987d3f, type: 3}
-    - {fileID: 1271719564573668774, guid: 10c757aece242c04b9e305df53987d3f, type: 3}
-    - {fileID: -8847932360821424632, guid: 10c757aece242c04b9e305df53987d3f, type: 3}
-    - {fileID: -2222042509762439607, guid: 10c757aece242c04b9e305df53987d3f, type: 3}
-    - {fileID: 5097203779559714630, guid: 10c757aece242c04b9e305df53987d3f, type: 3}
+    - {fileID: 5860029008183834232, guid: 06cde19dc84e64846adf9e74019dcad4, type: 3}
+    - {fileID: 3370070525036151942, guid: 06cde19dc84e64846adf9e74019dcad4, type: 3}
+    - {fileID: 7789131531530399689, guid: 06cde19dc84e64846adf9e74019dcad4, type: 3}
+    - {fileID: -1668150839384567397, guid: 06cde19dc84e64846adf9e74019dcad4, type: 3}
+    - {fileID: -4019989720692859142, guid: 06cde19dc84e64846adf9e74019dcad4, type: 3}
