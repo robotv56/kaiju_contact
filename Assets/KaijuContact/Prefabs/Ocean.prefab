@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4639953044549442121}
   - component: {fileID: 4639953044549442120}
   - component: {fileID: 4639953044549442127}
+  - component: {fileID: -4631846863198296280}
   m_Layer: 0
   m_Name: Ocean
   m_TagString: Untagged
@@ -48,7 +49,7 @@ MonoBehaviour:
   _timeProvider: {fileID: 0}
   _primaryLight: {fileID: 0}
   _searchForPrimaryLightOnStartup: 1
-  _material: {fileID: 2100000, guid: 9def92ac79181fe41b238e91663f0fad, type: 2}
+  _material: {fileID: 2100000, guid: 66b25b76c920ab141bac0b3039c22b8b, type: 2}
   _layerName: Water
   _gravityMultiplier: 1
   _minTexelsPerWave: 3
@@ -95,7 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mode: 0
   _spectrum: {fileID: 0}
-  _windDirectionAngle: 0
+  _windDirectionAngle: -110
   _componentsPerOctave: 8
   _weight: 1
   _randomSeed: 0
@@ -107,3 +108,16 @@ MonoBehaviour:
   _directTowardsPoint: 0
   _pointPositionXZ: {x: 0, y: 0}
   _pointRadii: {x: 100, y: 200}
+--- !u!114 &-4631846863198296280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4639953044549442122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14e957dcf183db468d57f2363e7557b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ocean
