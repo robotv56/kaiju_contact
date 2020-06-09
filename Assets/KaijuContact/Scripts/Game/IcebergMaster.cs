@@ -53,6 +53,7 @@ public class IcebergMaster : NetworkBehaviour
     {
         // Self Identify
         gameObject.name = "IcebergMaster";
+        GlobalVars.globalGameObjects["iceberg_master"] = this.gameObject;
 
         // Iceberg Object Pool
         //icebergList.Callback = IcebergInfoChanged;

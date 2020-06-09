@@ -354,16 +354,17 @@ public class ClientMaster : NetworkBehaviour
         playerTargetVelocity = stv;
     }
 
+    //TODO use register system
     [Command(channel = 2)]
     public void CmdTriggerCreateIceberg(float x, float z)
     {
-        GameObject.Find("IcebergMaster").GetComponent<IcebergMaster>().CreateIceberg(x, z);
+        globalGameObjects["iceberg_master"].GetComponent<IcebergMaster>().CreateIceberg(x, z);
     }
 
     [Command(channel = 2)]
     public void CmdTriggerDamageIceberg(int icebergID, float damage)
     {
-        GameObject.Find("IcebergMaster").GetComponent<IcebergMaster>().DamageIceberg(icebergID, damage);
+        globalGameObjects["iceberg_master"].GetComponent<IcebergMaster>().DamageIceberg(icebergID, damage);
     }
 
     [Command]
