@@ -358,7 +358,7 @@ public class ClientMaster : NetworkBehaviour
     [Command(channel = 2)]
     public void CmdTriggerCreateIceberg(float x, float z)
     {
-        globalGameObjects["iceberg_master"].GetComponent<IcebergMaster>().CreateIceberg(x, z);
+        globalGameObjects["iceberg_master"].GetComponent<IcebergMaster>().CreateIceberg(x, z);//fuck the cache
     }
 
     [Command(channel = 2)]
