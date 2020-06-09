@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ShipTurret : MonoBehaviour
 {
+    public ParticleSystem fireEfect;
+
     private Vector3 aimPoint;
     private Vector3 aim;
     private GameObject shipPivot;
@@ -91,7 +93,7 @@ public class ShipTurret : MonoBehaviour
 
             // Networking
             transform.root.GetComponent<ClientMaster>().CmdHardFireCannon(playerMask, cannon.transform.position, cannon.transform.rotation, randomRotation * cannonPivot.transform.forward * cannonVelocity);
-
+            fireEfect.Play();
         }
     }
 
