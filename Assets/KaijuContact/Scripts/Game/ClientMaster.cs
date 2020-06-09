@@ -411,7 +411,7 @@ public class ClientMaster : NetworkBehaviour
     [Command]
     private void CmdResetHealth()
     {
-        kaijuHealth = 250f;
+        kaijuHealth = 100f;
         shipHealth = 50f;
     }
 

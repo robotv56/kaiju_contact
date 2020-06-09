@@ -11272,7 +11272,7 @@ MonoBehaviour:
   cannonAccuracy: 1.25
   cannonGravity: 0
   cannonReloadLength: 3.8
-  cannonDamage: 10
+  cannonDamage: 12
   cannonTrailLifetime: 3
   cannonMaxLifetime: 12
 --- !u!1 &6263951994263744561
@@ -11292,7 +11292,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6263951994263744560
 Transform:
   m_ObjectHideFlags: 0

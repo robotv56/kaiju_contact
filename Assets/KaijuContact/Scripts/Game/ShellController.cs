@@ -41,7 +41,7 @@ public class ShellController : MonoBehaviour
                     {
                         if (shellHit.transform.gameObject.name != "Kaiju Weakspot")
                         {
-                            damage = damage * 0.1f;
+                            damage = damage * 0.25f;
                         }
                         shellHit.transform.root.GetComponent<ClientMaster>().CmdDamageKaiju(damage);
                     }

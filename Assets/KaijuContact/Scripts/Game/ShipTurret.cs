@@ -26,7 +26,7 @@ public class ShipTurret : MonoBehaviour
     [SerializeField] private float cannonGravity = 10f;
     private float cannonReload = 0f;
     [SerializeField] private float cannonReloadLength = 3.8f;
-    [SerializeField] private float cannonDamage = 10f;
+    [SerializeField] private float cannonDamage = 12f;
     [SerializeField] private float cannonTrailLifetime = 3f;
     [SerializeField] private float cannonMaxLifetime = 12f;
     private bool onTarget = false;
