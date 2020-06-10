@@ -79,6 +79,7 @@ public class Missile : MonoBehaviour
 
     public void Launch()
     {
+        body.isKinematic = false;
         state = MissileState.LAUNCHED;
     }
 
@@ -90,6 +91,7 @@ public class Missile : MonoBehaviour
     private void Stow()
     {
         state = MissileState.IDLE;
+        body.isKinematic = true;
         this.transform.localPosition = Vector3.zero;
         this.transform.localRotation = Quaternion.Euler(-90,0,0);
         t = 0;
