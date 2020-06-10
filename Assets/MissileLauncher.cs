@@ -52,7 +52,7 @@ public class MissileLauncher : MonoBehaviour
 
         if(launching)
         {
-            if(seconds == 0 || seconds > 0.125f * launchTube + 1)
+            if(seconds > 0.125f * launchTube)
             {
                 missiles[launchTube].Launch();
                 
