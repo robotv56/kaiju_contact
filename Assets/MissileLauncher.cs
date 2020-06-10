@@ -78,6 +78,7 @@ public class MissileLauncher : MonoBehaviour
             if(seconds >= 10)
             {
                 cooldown = false;
+                seconds = 0;
             }
         }
 
