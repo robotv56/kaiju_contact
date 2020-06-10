@@ -1,80 +1,75 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MissileLauncher : MonoBehaviour
 {
+    //used for missiles, tells them how fast to move and how hard to turn
     public static float missileSpeed = 10;
     public static float missileTrackStrength = 100;
 
-    public Camera aimCamera;
-    public Transform laserPoint;
-    public LayerMask rayCastMask;
-    public Transform[] tubes;//not needed?
-    public Missile[] missiles;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Camera aimCamera;//the camera to use for aiming
+    public Transform laserPoint;//the transform used for tracking the aimpoint. could also just use a vector3 if needed
+    public LayerMask rayCastMask;//used to avoid hitting ships or other missiles with the raycast
+    public Missile[] missiles;//references to teh object pool
 
-    RaycastHit hit;
-    float seconds = 0;
-    int launchTube = 0;
-    bool launching = false;
-    bool cooldown = false;
+    RaycastHit hit;//storage for any raycast hits
+    float seconds = 0;//used for time based proccess
+    int launchTube = 0;//index for objext pool
+    bool launching = false;//are we launching?
+    bool cooldown = false;//are we cooling down?
+
     // Update is called once per frame
     void Update()
     {
         if(Physics.Raycast(aimCamera.transform.position, aimCamera.transform.forward, out hit, 1000,rayCastMask.value))
         {
-            
+            // if you end up using an empty or a vec3, you can remove this bit
             if(!laserPoint.gameObject.activeSelf)
             {
                 laserPoint.gameObject.SetActive(true);
             }
-            //Debug.Log(hit.point);
+
+            //store impact point of cast
             laserPoint.position = hit.point;
         }
         else
         {
+            //more gameobject bs
             if (laserPoint.gameObject.activeSelf)
             {
                 laserPoint.gameObject.SetActive(false);
             }
         }
 
+        //trigger launch
         if(Input.GetKeyDown(KeyCode.Space) && !cooldown && !launching)
         {
             launching = true;
-            Debug.Log("launch initiated");
         }
 
-        if(launching)
+        if(launching)//main launcher logic
         {
-            if(seconds > 0.125f * launchTube)
+            if(seconds > 0.125f * launchTube)//fire each missile an eighth of a second apart
             {
                 missiles[launchTube].Launch();
-                
-                Debug.Log("launched " + launchTube);
                 launchTube++;
             }
 
-            if(launchTube == 8)
+            if(launchTube == 8)//stop if all tubes fired
             {
-                Debug.Log("stopping launch");
                 launching = false;
                 cooldown = true;
                 seconds = 0;
                 launchTube = 0;
             }
-            //Debug.Log(seconds);
-            seconds += Time.deltaTime;
+
+            seconds += Time.deltaTime;//increment time
         }
 
-        if(!launching && cooldown)
+        if(!launching && cooldown)//cooldown
         {
-            seconds += Time.deltaTime;
+            seconds += Time.deltaTime;//increment time for cooldown
+
+            //cooldown is 10 seconds
             if(seconds >= 10)
             {
                 cooldown = false;

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Missile : MonoBehaviour
 {
@@ -11,10 +9,11 @@ public class Missile : MonoBehaviour
         HOMING//tracking laser
     }
 
+    //missile state
     public MissileState state { get; private set; } = MissileState.IDLE;//thanks visual studio :D
 
-    private Rigidbody body;
-    private Vector3 trackPoint;
+    private Rigidbody body;//storage for local rigidbody
+    private Vector3 trackPoint;//point in space to track
 
     // Start is called before the first frame update
     void Start()
@@ -22,10 +21,13 @@ public class Missile : MonoBehaviour
         body = this.GetComponent<Rigidbody>();
     }
 
-    float t = 0;
-    Quaternion look;
+    float seconds = 0;//time, in seconds. similar to seconds in MissileLauncher
+    Quaternion look;//look rotation
+
+    //used for direction calculation
     Vector3 direction;
     Vector3 heading;
+
     // Update is called once per frame
     void Update()
     {
@@ -35,35 +37,33 @@ public class Missile : MonoBehaviour
         //I am chaos
         switch (state)
         {
-            case MissileState.IDLE:
+            case MissileState.IDLE://do nothing
                 break;
-            case MissileState.LAUNCHED:
+            case MissileState.LAUNCHED://fly up
                 {
                     body.position += Vector3.up * Time.deltaTime * MissileLauncher.missileSpeed;
                 }
                 break;
-            case MissileState.HOMING:
+            case MissileState.HOMING://track laser point and turn towards it
                 {
                     direction = trackPoint - this.transform.position;
                     heading = direction / direction.magnitude;//normalize
                     look = Quaternion.LookRotation(heading);
-
-                    //body.rotation = look;
                     body.rotation = Quaternion.RotateTowards(body.rotation, look, MissileLauncher.missileTrackStrength *Time.deltaTime);
                     body.position += transform.forward * Time.deltaTime * MissileLauncher.missileSpeed;
                 }
                 break;
         }
 
-        if(state != MissileState.IDLE)
+        if(state != MissileState.IDLE)//flight time
         {
-            t += Time.deltaTime;
-            if( t >= 5)
+            seconds += Time.deltaTime;
+            if( seconds >= 5)//repool after 5 seconds
             {
-                t = 0;
+                seconds = 0;
                 Stow();
             }
-            else if(state != MissileState.HOMING && t >= 1)
+            else if(state != MissileState.HOMING && seconds >= 1)//start homing after one second
             {
                 state = MissileState.HOMING;
             }
@@ -73,27 +73,26 @@ public class Missile : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //explode
-        Debug.Log("impact registered");
         Stow();
     }
 
-    public void Launch()
+    public void Launch()//launches the missile, starting the flight sequence
     {
         body.isKinematic = false;
         state = MissileState.LAUNCHED;
     }
 
-    public void UpdateTrackingData(Vector3 trackPoint)
+    public void UpdateTrackingData(Vector3 trackPoint)//called by MissileLauncher.cs to give missile a target. gets called a lot
     {
         this.trackPoint = trackPoint;
     }
 
-    private void Stow()
+    private void Stow()//puts missile back in object pool
     {
         state = MissileState.IDLE;
         body.isKinematic = true;
         this.transform.localPosition = Vector3.zero;
         this.transform.localRotation = Quaternion.Euler(-90,0,0);
-        t = 0;
+        seconds = 0;
     }
 }
