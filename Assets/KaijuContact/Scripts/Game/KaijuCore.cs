@@ -32,16 +32,19 @@ public class KaijuCore : MonoBehaviour
     private int icebergsSpawned = 0;
     private float icebeamTime = 0f;
     private float icebeamCooldown = 0f;
-    [SerializeField] private float icebeamTimeMax = 4f;
+    [SerializeField] private float icebeamTimeMax = 6f;
     [SerializeField] private float icebeamStepLength = 80f;
-    [SerializeField] private float icebeamLengthMax = 1200f;
-    [SerializeField] private float icebeamRangeMax = 8000f;
-    [SerializeField] private float icebeamCooldownMax = 8f;
+    [SerializeField] private float icebeamLengthMax = 2000f;
+    [SerializeField] private float icebeamRangeMax = 5500f;
+    [SerializeField] private float icebeamCooldownMax = 18f;
     private bool slash = false;
     private GameObject slashObject;
     private float slashCooldown = 0f;
-    [SerializeField] private float slashDamageMax = 5f;
-    [SerializeField] private float slashCooldownMax = 0.85f;
+    [SerializeField] private float slashDamageMax = 4f;
+    [SerializeField] private float slashCooldownMax = 1.12f;
+    public bool dying;
+    private float dyingOffset = 320f;
+    private float dyingAmount;
 
     private void Start()
     {
@@ -51,6 +54,29 @@ public class KaijuCore : MonoBehaviour
 
     private void Update()
     {
+        // Dying
+        if (dying)
+        {
+            dyingAmount = Mathf.Clamp(dyingAmount + 0.125f * Time.deltaTime, 0f, 1f);
+            kaijuDesiredMovement = Vector3.zero;
+            if (submergedTime != 0f && !FullySubmerged() && submergedTime > submergedTransitionTime)
+            {
+                submergedTime = submergedTimeMax - submergedTime;
+            }
+            if (submergedTime != 0f && FullySubmerged())
+            {
+                submergedTime = submergedTransitionTime;
+            }
+            if (icebeamTime != 0f)
+            {
+                icebeamTime = 0f;
+            }
+        }
+        else if (!dying && dyingAmount != 0f)
+        {
+            dyingAmount = 0f;
+        }
+
         Vector2 rot;
         if (FullySubmerged())
         {
@@ -98,7 +124,7 @@ public class KaijuCore : MonoBehaviour
         {
             submergedOffset = 0f;
         }
-        kaijuPivot.transform.localPosition = new Vector3(0f, -submergedOffset, 0f);
+        kaijuPivot.transform.localPosition = new Vector3(0f, -submergedOffset + Mathf.Pow(dyingAmount,2f) * -dyingOffset, 0f);
 
         //Slash
         slashCooldown = Mathf.Clamp(slashCooldown - Time.deltaTime, 0f, slashCooldownMax);
