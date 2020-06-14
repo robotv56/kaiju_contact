@@ -46,7 +46,7 @@ public class AIShipController : MonoBehaviour {
         }
         if (core.GetHealth() == 0f) {
             //player.GetComponent<PlayerShipController>().IncreaseScore();
-            //gameMaster.EnemyDestroyed();
+            gameMaster.EnemyDestroyed();
             Destroy(gameObject);
         }
     }

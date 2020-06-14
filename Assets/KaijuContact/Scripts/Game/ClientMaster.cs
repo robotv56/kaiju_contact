@@ -12,17 +12,11 @@ using static GlobalVars;
 
 public class ClientMaster : NetworkBehaviour
 {
-    private byte playerNumber;
-    [SyncVar] string playerName;
-    private bool gameMasterActive = false;
-
     [SyncVar] float kaijuHealth;
     [SyncVar] float shipHealth;
 
     private Text healthUI;
 
-    [SyncVar] bool playing;
-    [SyncVar] bool kaijuOptIn;
     [SyncVar] bool isKaiju;
     [SyncVar] Weapons shipWeapon = Weapons.RAILGUN;
     [SerializeField] private GameObject[] shipWeapons = { null, null, null };
@@ -65,37 +59,18 @@ public class ClientMaster : NetworkBehaviour
     //used for storing gameobjects locally, helps save memory
     //is VOLATILE, it will often switch to reference different things, only use locally
     private GameObject gameObjectCache;
-    //private bool hasStarted = false;//used for starting camera
+    private bool hasStarted = false;//used for starting camera
     private GameObject kaijuTracker;
 
-    [SerializeField] private GameObject gameMasterPrefab;
     [SerializeField] private GameObject icebergMasterPrefab;
-
-    private GameObject icebergMaster;
-    private GameObject startingCamera;
-    private GameObject ocean;
 
     private void Start()
     {
-        playing = false;
-        if (gameMaster != null)
-        {
-            playerNumber = gameMaster.AddPlayer(gameObject);
-            gameMasterActive = true;
-        }
-        else if (isLocalPlayer && isServer)
-        {
-            NetworkServer.SpawnWithClientAuthority(Instantiate(gameMasterPrefab, Vector3.zero, Quaternion.identity), connectionToClient);
-        }
-
-        //Debug.Log(0);
-        ResetHealth();
+        Debug.Log(0);
+        CmdResetHealth();
         if (isLocalPlayer)
         {
-            // Generate a name for the player
-            CmdSetPlayerName(namePool[Random.Range(0, namePool.Length)] + "_" + Random.Range(0,99));
-
-            if (globalGameObjects.TryGetValue("canvas", out gameObjectCache))
+            if(globalGameObjects.TryGetValue("canvas", out gameObjectCache))
             {
                 //TODO ui
                 healthUI = gameObjectCache.transform.Find("Health UI").GetComponent<Text>();
@@ -104,13 +79,12 @@ public class ClientMaster : NetworkBehaviour
             {
                 Debug.LogError("Could not find canvas");
             }
-            //Debug.Log(1);
+            Debug.Log(1);
         }
         if (isLocalPlayer && isServer)
         {
-            //Debug.Log(2);
-            icebergMaster = Instantiate(icebergMasterPrefab, Vector3.zero, Quaternion.identity);
-            NetworkServer.SpawnWithClientAuthority(icebergMaster, connectionToClient);
+            Debug.Log(2);
+            NetworkServer.SpawnWithClientAuthority(Instantiate(icebergMasterPrefab, Vector3.zero, Quaternion.identity), connectionToClient);
             //GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().customConfig = true;
             //GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageSize = 248;
             //GameObject.Find("Multiplayer_Manager").GetComponent<NetworkManager>().connectionConfig.MaxCombinedReliableMessageCount = 248;
@@ -131,7 +105,7 @@ public class ClientMaster : NetworkBehaviour
 
             //NetworkServer.Configure(Network.ConnectionConfig)
         }
-        //Debug.Log(3);
+        Debug.Log(3);
         kaijuCore = playerObjects[0].GetComponent<KaijuCore>();
         shipCore = playerObjects[1].GetComponent<ShipCore>();
         shipTurret = playerObjects[1].transform.Find("Ship Pivot/Ship Body/Turret Base/Turret Horizontal").GetComponent<ShipTurret>();
@@ -139,109 +113,52 @@ public class ClientMaster : NetworkBehaviour
         shipController = playerObjects[1].GetComponent<PlayerShipController>();
         Debug.Log(playerObjects[1]);
         Debug.Log(shipController);
-        //Debug.Log(4);
+        Debug.Log(4);
         isKaiju = false;
         globalGameObjects.TryGetValue("kaiju_tracker", out kaijuTracker);
-
-        //I'm sorry Andrew, but something wasn't working with trying to get the starting camera back again so I did this as a fix.
-        if (isLocalPlayer)
-        {
-            startingCamera = GameObject.Find("Starting Camera");
-            ocean = GameObject.Find("Ocean");
-        }
-    }
-
-    private void OnDestroy()
-    {
-        gameMaster.RemovePlayer(playerNumber);
     }
 
     private void Update()
     {
-        // Add Player To GameMaster
-        if (!gameMasterActive && gameMaster != null)
-        {
-            playerNumber = gameMaster.AddPlayer(gameObject);
-            gameMasterActive = true;
-        }
-
-        // Health / Set Alive
-        if (playing && isKaiju && (kaijuHealth > 0f) != kaijuController.isAlive)
-        {
-            kaijuController.isAlive = kaijuHealth > 0f;
-            if (playing && kaijuCore.dying != (kaijuHealth <= 0f))
-            {
-                kaijuCore.dying = kaijuHealth <= 0f;
-            }
-        }
-        if (playing && !isKaiju && (shipHealth > 0f) != shipController.isAlive)
-        {
-            shipController.isAlive = shipHealth > 0f;
-            if (playing && shipCore.dying != (shipHealth <= 0f))
-            {
-                shipCore.dying = shipHealth <= 0f;
-            }
-        }
         // Set Active Weapon
-        if (playing && shipWeapon == Weapons.RAILGUN && (!shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
+        if (shipWeapon == Weapons.RAILGUN && (!shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
         {
             shipWeapons[0].SetActive(true);
             shipWeapons[1].SetActive(false);
             shipWeapons[2].SetActive(false);
         }
-        if (playing && shipWeapon == Weapons.LASER && (shipWeapons[0].activeSelf || !shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
+        if (shipWeapon == Weapons.LASER && (shipWeapons[0].activeSelf || !shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
         {
             shipWeapons[0].SetActive(false);
             shipWeapons[1].SetActive(true);
             shipWeapons[2].SetActive(false);
         }
-        if (playing && shipWeapon == Weapons.MINIGUN && (shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || !shipWeapons[2].activeSelf))
+        if (shipWeapon == Weapons.MINIGUN && (shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || !shipWeapons[2].activeSelf))
         {
             shipWeapons[0].SetActive(false);
             shipWeapons[1].SetActive(false);
             shipWeapons[2].SetActive(true);
         }
-        if (!playing && (shipWeapons[0].activeSelf || shipWeapons[1].activeSelf || shipWeapons[2].activeSelf))
-        {
-            shipWeapons[0].SetActive(false);
-            shipWeapons[1].SetActive(false);
-            shipWeapons[2].SetActive(false);
-        }
 
         // Set Kaiju/Ship
-        if (playing && isKaiju && !playerObjects[0].activeSelf)
+        if (isKaiju && !playerObjects[0].activeSelf)
         {
             playerObjects[0].SetActive(true);
             playerObjects[1].SetActive(false);
             globalGameObjects["kaiju_track_point"] = playerObjects[0].transform.Find("KaijuTrackPoint").gameObject;
         }
-        if (playing && !isKaiju && !playerObjects[1].activeSelf)
+        if (!isKaiju && !playerObjects[1].activeSelf)
         {
             playerObjects[0].SetActive(false);
             playerObjects[1].SetActive(true);
         }
-        if (!playing && (playerObjects[0].activeSelf || playerObjects[1].activeSelf))
-        {
-            playerObjects[0].SetActive(false);
-            playerObjects[1].SetActive(false);
-        }
 
         // Set Local Camera
-        if (playing && isLocalPlayer && ((isKaiju && (!playerCameras[0].activeSelf || playerCameras[1].activeSelf)) || (!isKaiju && (playerCameras[0].activeSelf || !playerCameras[1].activeSelf))))
+        if (isLocalPlayer && ((isKaiju && (!playerCameras[0].activeSelf || playerCameras[1].activeSelf)) || (!isKaiju && (playerCameras[0].activeSelf || !playerCameras[1].activeSelf))))
         {
             playerCameras[0].SetActive(isKaiju);
             playerCameras[1].SetActive(!isKaiju);
 
-            startingCamera.SetActive(false);
-            if (isKaiju)
-            {
-                ocean.GetComponent<OceanRenderer>().Viewpoint = playerCameras[0].transform;
-            }
-            else
-            {
-                ocean.GetComponent<OceanRenderer>().Viewpoint = playerCameras[1].transform;
-            }
-            /*
             //setting cache here
             if (globalGameObjects.TryGetValue("ocean", out gameObjectCache))
             {
@@ -257,34 +174,34 @@ public class ClientMaster : NetworkBehaviour
             else Debug.LogError("Could not find the ocean");
 
             //setting cache here
-            if (globalGameObjects.TryGetValue("starting_camera", out gameObjectCache) && gameObjectCache.activeSelf)
+            if (globalGameObjects.TryGetValue("starting_camera", out gameObjectCache) && gameObjectCache.active)
             {
                 gameObjectCache.SetActive(false);
-                //hasStarted = true;
+                hasStarted = true;
             }
-            else// if(!hasStarted)
+            else if(!hasStarted)
             {
                 Debug.LogError("Could not find starting camera");
-            }*/
+            }
         }
-        else if ((!playing || !isLocalPlayer) && (playerCameras[0].activeSelf || playerCameras[1].activeSelf))
+        else if (!isLocalPlayer && (playerCameras[0].activeSelf || playerCameras[1].activeSelf))
         {
             playerCameras[0].SetActive(false);
             playerCameras[1].SetActive(false);
         }
 
         // Send/Receive Player Info
-        if (playing && isKaiju && kaijuController.isLocal != isLocalPlayer)
+        if (isKaiju && kaijuController.isLocal != isLocalPlayer)
         {
             kaijuController.isLocal = isLocalPlayer;
         }
-        if (playing && !isKaiju && shipController.isLocal != isLocalPlayer)
+        if (!isKaiju && shipController.isLocal != isLocalPlayer)
         {
             shipController.isLocal = isLocalPlayer;
         }
         updateTime += Time.deltaTime;
 
-        if (playing && updateTime > 0.2f)
+        if (updateTime > 0.2f)
         {
             updateTime = 0f;
             int k = 0;
@@ -400,45 +317,6 @@ public class ClientMaster : NetworkBehaviour
         }
     }
 
-    public bool GetIsKaiju()
-    {
-        return isKaiju;
-    }
-
-    public string GetName()
-    {
-        return playerName;
-    }
-
-    public bool GetKaijuOptIn()
-    {
-        return kaijuOptIn;
-    }
-
-    public float GetHealth()
-    {
-        if (isKaiju)
-        {
-            return kaijuHealth;
-        }
-        else
-        {
-            return shipHealth;
-        }
-    }
-
-    public GameObject GetIcebergMaster()
-    {
-        if (isServer && isLocalPlayer)
-        {
-            return icebergMaster;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
     [Command(channel = 1)]
     private void CmdUpdatePlayer(Vector3 pos, float kdr, float kr, Vector3 kdm, Vector3 km, float ks, float srud, float sarud, float sr, float st, float ss, Vector3 sap, Vector3 stv)
     {
@@ -514,6 +392,13 @@ public class ClientMaster : NetworkBehaviour
     }
 
     [Command]
+    public void CmdSetKaiju()
+    {
+        isKaiju = !isKaiju;
+        CmdResetHealth();
+    }
+
+    [Command]
     public void CmdSetShipWeapon(Weapons selection)
     {
         shipWeapon = selection;
@@ -523,157 +408,21 @@ public class ClientMaster : NetworkBehaviour
     {
         return isLocalPlayer;
     }
-    
-    [Command]
-    private void CmdSetPlayerName(string name)
-    {
-        playerName = name;
-    }
 
     [Command]
-    public void CmdUpdateKaijuOptIn(bool choice)
-    {
-        kaijuOptIn = choice;
-    }
-
-    [Command]
-    public void CmdDamageKaiju(float damage)
-    {
-        kaijuHealth = Mathf.Clamp(kaijuHealth - damage, 0f, kaijuHealth);
-        RpcSetKaijuHealth(kaijuHealth);
-    }
-
-    [ClientRpc]
-    public void RpcSetKaijuHealth(float health)
-    {
-        kaijuHealth = health;
-    }
-
-    [Command]
-    public void CmdDamageShip(float damage)
-    {
-        shipHealth = Mathf.Clamp(shipHealth - damage, 0f, shipHealth);
-        RpcSetShipHealth(shipHealth);
-    }
-
-    [ClientRpc]
-    public void RpcSetShipHealth(float health)
-    {
-        shipHealth = health;
-    }
-
-    private void ResetHealth()
+    private void CmdResetHealth()
     {
         kaijuHealth = 100f;
         shipHealth = 50f;
     }
 
-    public void TriggerSetKaiju(bool choice, Vector3 spawnPos, float spawnRot)
+    public void CmdDamageKaiju(float damage)
     {
-        SetKaiju(choice, spawnPos, spawnRot);
-        RpcSetKaiju(choice, spawnPos, spawnRot);
+        kaijuHealth = Mathf.Clamp(kaijuHealth - damage, 0f, kaijuHealth);
     }
 
-    private void SetKaiju(bool choice, Vector3 spawnPos, float spawnRot)
+    public void CmdDamageShip(float damage)
     {
-        playing = true;
-        isKaiju = choice;
-        ResetHealth();
-
-        playerPosition = spawnPos;
-        if (isKaiju)
-        {
-            playerObjects[0].transform.position = spawnPos;
-            if (isLocalPlayer)
-            {
-                kaijuController.HardSetCamera();
-            }
-            playerDesiredRotation = spawnRot;
-            kaijuCore.SetDesiredRotation(spawnRot);
-            playerKaijuMovement = new Vector3(0f, 0f, -800f);
-            kaijuCore.HardSetMovement(new Vector3(0f, 0f, -800f));
-            playerKaijuRotation = spawnRot;
-            kaijuCore.HardSetRotation(spawnRot);
-            playerSubmerged = 7.5f;
-            kaijuCore.HardSetSubmerged(7.5f);
-        }
-        else
-        {
-            playerObjects[1].transform.position = spawnPos;
-            playerShipRotation = spawnRot;
-            shipCore.HardSetRotation(spawnRot);
-        }
-
-        /*CmdUpdatePlayer(
-            spawnPos,
-            spawnRot,
-            spawnRot,
-            playerDesiredMovement,
-            playerKaijuMovement,
-            playerSubmerged,
-            playerRudder,
-            playerActualRudder,
-            spawnRot,
-            playerThrottle,
-            playerShipSpeed,
-            playerAimPoint,
-            playerTargetVelocity
-        );*/
-    }
-
-    [ClientRpc]
-    private void RpcSetKaiju(bool choice, Vector3 spawnPos, float spawnRot)
-    {
-        SetKaiju(choice, spawnPos, spawnRot);
-    }
-
-    public void TriggerEndMatch()
-    {
-        EndMatch();
-        RpcEndMatch();
-    }
-
-    private void EndMatch()
-    {
-        playing = false;
-        if (isLocalPlayer)
-        {
-            startingCamera.SetActive(true);
-            ocean.GetComponent<OceanRenderer>().Viewpoint = startingCamera.transform;
-        }
-    }
-
-    [ClientRpc]
-    private void RpcEndMatch()
-    {
-        EndMatch();
-    }
-
-    public void TriggerResetMatch()
-    {
-        ResetMatch();
-        RpcResetMatch();
-    }
-
-    private void ResetMatch()
-    {
-        if (isKaiju)
-        {
-            kaijuCore.dying = false;
-            kaijuController.isAlive = true;
-        }
-        else
-        {
-            shipCore.dying = false;
-            shipController.isAlive = true;
-        }
-        isKaiju = false;
-        ResetHealth();
-    }
-
-    [ClientRpc]
-    private void RpcResetMatch()
-    {
-        ResetMatch();
+        shipHealth = Mathf.Clamp(shipHealth - damage, 0f, shipHealth);
     }
 }

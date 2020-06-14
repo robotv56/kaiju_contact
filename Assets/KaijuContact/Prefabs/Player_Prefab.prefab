@@ -4925,7 +4925,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: e182cf852918675438136131ddc3263e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11267,8 +11267,8 @@ MonoBehaviour:
   turretRotationMax: 120
   cannonRotationSpeedMax: 25
   cannonRotationAcceleration: 360
-  cannonRotationMax_up: 90
-  cannonRotationMax_down: 45
+  cannonRotationMax_up: 80
+  cannonRotationMax_down: 10
   cannonVelocity: 4000
   cannonAccuracy: 1.25
   cannonGravity: 0
@@ -11327,7 +11327,6 @@ MonoBehaviour:
   cameraMaxY_up: 25
   cameraMaxY_down: 45
   isLocal: 0
-  isAlive: 0
 --- !u!114 &5848331205688125948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11353,14 +11352,13 @@ MonoBehaviour:
   submergedOffsetMax: 300
   submergedForwardPriority: 0.35
   submergedCooldownMax: 10
-  icebeamTimeMax: 6
+  icebeamTimeMax: 4
   icebeamStepLength: 80
-  icebeamLengthMax: 2000
-  icebeamRangeMax: 5500
-  icebeamCooldownMax: 18
-  slashDamageMax: 4
-  slashCooldownMax: 1.12
-  dying: 0
+  icebeamLengthMax: 1200
+  icebeamRangeMax: 8000
+  icebeamCooldownMax: 8
+  slashDamageMax: 5
+  slashCooldownMax: 0.85
 --- !u!1 &6263951994395630528
 GameObject:
   m_ObjectHideFlags: 0
@@ -11521,7 +11519,6 @@ MonoBehaviour:
   cameraMaxY_up: 15
   cameraMaxY_down: 30
   isLocal: 0
-  isAlive: 0
 --- !u!114 &5946364189999479196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11536,13 +11533,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rudderTurnRate: 10
   rudderMaximum: 20
-  rudderMaxEffectSpeed: 35
-  speedMaxFwd: 140
-  speedMaxRev: 35
+  rudderMaxEffectSpeed: 25
+  speedMaxFwd: 125
+  speedMaxRev: 25
   acceleration: 12
   coastDrag: 7
   health: 30
-  dying: 0
 --- !u!1 &6263951994843824368
 GameObject:
   m_ObjectHideFlags: 0
@@ -12020,8 +12016,6 @@ MonoBehaviour:
   playerCameras:
   - {fileID: 6263951994874821965}
   - {fileID: 6263951995668609952}
-  gameMasterPrefab: {fileID: 4329763332693635778, guid: d6a1580e65d16a64bbd8842970609c78,
-    type: 3}
   icebergMasterPrefab: {fileID: 7985311457500208369, guid: e7fa713957d059b4aa0e5b7c22a9550c,
     type: 3}
 --- !u!1 &6263951995397024302

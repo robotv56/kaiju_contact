@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using XboxCtrlrInput;
-using static GlobalVars;
 
 public class PlayerKaijuController : MonoBehaviour
 {
@@ -16,7 +15,6 @@ public class PlayerKaijuController : MonoBehaviour
     private int playerMask = (1 << 8) + (1 << 10) + (1 << 11);
 
     public bool isLocal;
-    public bool isAlive;
 
     private void Start()
     {
@@ -29,65 +27,60 @@ public class PlayerKaijuController : MonoBehaviour
     {
         if (isLocal)
         {
-            HideCursor(gameMaster.IsGameInProgress());
+            HideCursor(true);
             if (playerInput == PlayerInput.KEYBOARD)
             {
-                if (isAlive)
+                int vertical = 0;
+                if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
                 {
-                    int vertical = 0;
-                    if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
-                    {
-                        vertical = 1;
-                    }
-                    else if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))
-                    {
-                        vertical = -1;
-                    }
-                    int horizontal = 0;
-                    if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
-                    {
-                        horizontal = 1;
-                    }
-                    else if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-                    {
-                        horizontal = -1;
-                    }
-                    core.SetDesiredMovement(NormalizeKeyboardInput(horizontal, vertical));
+                    vertical = 1;
                 }
+                else if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))
+                {
+                    vertical = -1;
+                }
+                int horizontal = 0;
+                if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+                {
+                    horizontal = 1;
+                }
+                else if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+                {
+                    horizontal = -1;
+                }
+                core.SetDesiredMovement(NormalizeKeyboardInput(horizontal, vertical));
+
                 cameraAim = new Vector2(cameraAim.x + Input.GetAxis("Mouse X"), Mathf.Clamp(cameraAim.y - Input.GetAxis("Mouse Y"), -cameraMaxY_up, cameraMaxY_down));
                 cameraPivot.transform.rotation = Quaternion.Euler(cameraAim.y, cameraAim.x, 0f);
-                if (isAlive)
+                core.SetDesiredRotation(cameraPivot.transform.eulerAngles.y);
+
+                if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    core.SetDesiredRotation(cameraPivot.transform.eulerAngles.y);
+                    core.SetSubmerge();
+                }
 
-                    if (Input.GetKeyDown(KeyCode.Space))
-                    {
-                        core.SetSubmerge();
-                    }
+                if (Input.GetMouseButtonDown(0))
+                {
+                    core.TriggerSlash();
+                }
 
-                    if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(1) || core.IcebeamFiring())
+                {
+                    Ray aimRay = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+                    Physics.Raycast(aimRay, out RaycastHit aimHit, core.GetIcebeamRange(), (1 << 10));
+                    core.UpdateIcebeam(aimHit.point);
+                    if (Input.GetMouseButtonDown(1))
                     {
-                        core.TriggerSlash();
+                        core.TriggerIcebeam();
                     }
+                }
 
-                    if (Input.GetMouseButtonDown(1) || core.IcebeamFiring())
-                    {
-                        Ray aimRay = mainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-                        Physics.Raycast(aimRay, out RaycastHit aimHit, core.GetIcebeamRange(), (1 << 10));
-                        core.UpdateIcebeam(aimHit.point);
-                        if (Input.GetMouseButtonDown(1))
-                        {
-                            core.TriggerIcebeam();
-                        }
-                    }
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    transform.parent.GetComponent<ClientMaster>().CmdSetKaiju();
                 }
             }
         }
-    }
-
-    public void HardSetCamera()
-    {
-        cameraAim = new Vector2(180f, -25f);
     }
 
     private Vector3 NormalizeKeyboardInput(float x, float y)

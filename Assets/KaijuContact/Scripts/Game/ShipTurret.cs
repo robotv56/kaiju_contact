@@ -21,8 +21,8 @@ public class ShipTurret : MonoBehaviour
     private float cannonRotationSpeed = 0f;
     [SerializeField] private float cannonRotationSpeedMax = 25f;
     [SerializeField] private float cannonRotationAcceleration = 360f;
-    [SerializeField] private float cannonRotationMax_up = 90f;
-    [SerializeField] private float cannonRotationMax_down = 45f;
+    [SerializeField] private float cannonRotationMax_up = 80f;
+    [SerializeField] private float cannonRotationMax_down = 10f;
     [SerializeField] private float cannonVelocity = 4000f;
     [SerializeField] private float cannonAccuracy = 1.25f;
     [SerializeField] private float cannonGravity = 10f;

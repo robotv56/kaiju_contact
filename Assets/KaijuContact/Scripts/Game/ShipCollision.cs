@@ -19,20 +19,20 @@ public class ShipCollision : MonoBehaviour
             dir = Quaternion.Euler(0f, -transform.parent.parent.GetComponent<ShipCore>().GetRotation(), 0f) * dir.normalized;
             if (dir.z > 0.2f)
             {
-                if (transform.parent.parent.GetComponent<ShipCore>().GetSpeed() > 15f && collision.gameObject.layer == 11)
+                if (transform.parent.parent.GetComponent<ShipCore>().GetSpeed() > 15f)
                     transform.parent.parent.GetComponent<ShipCore>().HardSetSpeed(15f);
             }
             if (dir.z < -0.2f)
             {
-                if (transform.parent.parent.GetComponent<ShipCore>().GetSpeed() < -8f && collision.gameObject.layer == 11)
+                if (transform.parent.parent.GetComponent<ShipCore>().GetSpeed() < -8f)
                     transform.parent.parent.GetComponent<ShipCore>().HardSetSpeed(-8f);
             }
                 float maxDist = 220f;
                 float minDist = 80f;
             if (collision.gameObject.layer == 9)
             {
-                maxDist = 300f;
-                minDist = 160f;
+                maxDist = 260f;
+                minDist = 145f;
             }
             dir = collision.transform.position - transform.parent.parent.position;
             dir = new Vector3(dir.x, 0f, dir.z);

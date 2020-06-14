@@ -148,18 +148,4 @@ public class IcebergMaster : NetworkBehaviour
     {
         icebergs[index].GetComponent<Iceberg>().Shrink(speed);
     }
-
-    public void ResetMatch()
-    {
-        if (isServer)
-        {
-            // Destroy all of those damn icebergs
-            for (int i = icebergList.Count; i < 0; i--)
-            {
-                ShrinkIceberg(icebergList[0].index, 0.1f);
-                RpcShrinkIceberg(icebergList[0].index, 0.1f);
-                icebergList.RemoveAt(0);
-            }
-        }
-    }
 }

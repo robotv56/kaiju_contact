@@ -9,18 +9,15 @@ public class ShipCore : MonoBehaviour
     private float rudderTarget;
     [SerializeField] private float rudderTurnRate = 10f;
     [SerializeField] private float rudderMaximum = 20f;
-    [SerializeField] private float rudderMaxEffectSpeed = 35f;
+    [SerializeField] private float rudderMaxEffectSpeed = 25f;
     private float throttle;
     private float speed;
-    [SerializeField] private float speedMaxFwd = 140f;
-    [SerializeField] private float speedMaxRev = 35f;
+    [SerializeField] private float speedMaxFwd = 125f;
+    [SerializeField] private float speedMaxRev = 25f;
     [SerializeField] private float acceleration = 12f;
     [SerializeField] private float coastDrag = 7f;
     [SerializeField] private float health = 30f;
-    public bool dying;
-    private float dyingOffset = 80f;
-    private float dyingAmount;
-
+    
     private GameObject shipPivot;
 
     void Start()
@@ -31,18 +28,6 @@ public class ShipCore : MonoBehaviour
 
     void Update()
     {
-        // Dying
-        if (dying)
-        {
-            dyingAmount = Mathf.Clamp(dyingAmount + 0.125f * Time.deltaTime, 0f, 1f);
-            //rudderTarget = 0f;
-            throttle = 0f;
-        }
-        else if (!dying && dyingAmount != 0f)
-        {
-            dyingAmount = 0f;
-        }
-
         // Rudder Control
         rudder = IncreaseTo(rudder, rudderTarget, rudderTurnRate * RudderSlowing(speed, speedMaxFwd, -0.2f), rudderTurnRate * RudderSlowing(speed, speedMaxFwd, 0.4f));
         // Speed Control and Coasting
@@ -60,9 +45,9 @@ public class ShipCore : MonoBehaviour
         shipPivot.transform.rotation = Quaternion.Euler(0f, rotation, Mathf.Clamp(rudder * Mathf.Abs(RudderEffectiveness(speed, rudderMaxEffectSpeed) * (speed / speedMaxFwd)) * 0.45f, -7.2f, 7.2f));
         transform.position += shipPivot.transform.forward * speed * Time.deltaTime;
 
-        if (transform.position.y != Mathf.Pow(dyingAmount, 2f) * -dyingOffset)
+        if (transform.position.y != 0f)
         {
-            transform.position = new Vector3(transform.position.x, Mathf.Pow(dyingAmount, 2f) * -dyingOffset, transform.position.z);
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
         }
     }
     
