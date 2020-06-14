@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AutoRegister : MonoBehaviour
+public class AutoRegister : MonoBehaviour, IRegistrationEntry
 {
     public string key;
     public bool hideOnStart = false;
 
-    void Awake()
+    public void Init()//fuck disabled scripts, portal time
     {
         GlobalVars.globalGameObjects[key] = this.gameObject;
         GameObject g;

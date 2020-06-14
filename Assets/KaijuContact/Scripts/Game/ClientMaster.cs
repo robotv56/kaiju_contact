@@ -639,6 +639,7 @@ public class ClientMaster : NetworkBehaviour
         playing = false;
         if (isLocalPlayer)
         {
+
             startingCamera.SetActive(true);
             ocean.GetComponent<OceanRenderer>().Viewpoint = startingCamera.transform;
         }
