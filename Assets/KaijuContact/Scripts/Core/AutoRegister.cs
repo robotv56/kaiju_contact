@@ -5,6 +5,7 @@ using UnityEngine;
 public class AutoRegister : MonoBehaviour
 {
     public string key;
+    public bool hideOnStart = false;
 
     void Awake()
     {
@@ -13,6 +14,14 @@ public class AutoRegister : MonoBehaviour
         if (!GlobalVars.globalGameObjects.TryGetValue(key, out g))
         {
             Debug.LogWarning("Registration of GameObject with key \"" + key + "\" failed.");
+        }
+    }
+
+    private void Start()
+    {
+        if(hideOnStart)
+        {
+            this.gameObject.SetActive(false);
         }
     }
 }

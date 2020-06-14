@@ -346,6 +346,7 @@ public class ClientMaster : NetworkBehaviour
             }
             else
             {
+                kaijuTracker.SetActive(true);
                 healthUI.text = "Health: " + shipHealth;
                 //setting cache here
                 if(globalGameObjects.TryGetValue("kaiju_track_point", out gameObjectCache))
