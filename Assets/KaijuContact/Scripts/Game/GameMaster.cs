@@ -23,6 +23,13 @@ public class GameMaster : NetworkBehaviour {
     private bool starting;
     [SerializeField] GameObject[] spawns = new GameObject[8];
 
+    //UI refs
+    public GameObject menu;
+    public GameObject winScreen;
+    public GameObject adfLogo;
+    public GameObject kaijuLogo;
+    public TMPro.TextMeshProUGUI wintext;
+
     private void Start()
     {
         gameMaster = this;
@@ -182,6 +189,19 @@ public class GameMaster : NetworkBehaviour {
             gameState = GameStates.POST_LOBBY;
 
             // Enable Post-Lobby UI
+            menu.SetActive(true);
+            winScreen.SetActive(true);
+
+            if(winner == Winners.ADF_WINS)
+            {
+                adfLogo.SetActive(true);
+                wintext.text = "ADF Victory";
+            }
+            else
+            {
+                kaijuLogo.SetActive(true);
+                wintext.text = "Kaiju Victory";
+            }
 
             for (int i = 0; i < 32; i++)
             {
@@ -201,6 +221,11 @@ public class GameMaster : NetworkBehaviour {
             winner = Winners.UNDETERMINED;
 
             // Disable Post-Lobby UI
+            adfLogo.SetActive(false);
+            kaijuLogo.SetActive(false);
+            winScreen.SetActive(false);
+            menu.SetActive(false);
+            
             // Enable Pre-Lobby UI
 
             for (int i = 0; i < 32; i++)
