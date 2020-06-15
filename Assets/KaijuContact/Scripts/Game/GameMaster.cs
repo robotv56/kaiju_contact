@@ -33,6 +33,11 @@ public class GameMaster : NetworkBehaviour {
     private void Start()
     {
         gameMaster = this;
+        //Set menu
+        //Set winScreen
+        //Set adfLogo
+        //Set kaijuLogo
+        //Set wintext
     }
 
     private void Update()
