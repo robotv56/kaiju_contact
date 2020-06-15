@@ -13,7 +13,7 @@ public class NetworkStarter : MonoBehaviour
         manager = GetComponent<NetworkManager>();
         manager.StartMatchMaker();
     }
-    
+
     void Update()
     {
         if (manager.matchMaker != null && n < 2)

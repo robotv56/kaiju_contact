@@ -21,14 +21,14 @@ public class GameMaster : NetworkBehaviour {
     [SyncVar] Winners winner = Winners.UNDETERMINED;
     private float matchTimer;
     private bool starting;
-    [SerializeField] GameObject[] spawns = new GameObject[8];
+    [SerializeField] private GameObject[] spawns = new GameObject[8];
 
     //UI refs
-    public GameObject menu;
-    public GameObject winScreen;
-    public GameObject adfLogo;
-    public GameObject kaijuLogo;
-    public TMPro.TextMeshProUGUI wintext;
+    private GameObject menu;
+    private GameObject winScreen;
+    private GameObject adfLogo;
+    private GameObject kaijuLogo;
+    private TMPro.TextMeshProUGUI wintext;
 
     private void Start()
     {
