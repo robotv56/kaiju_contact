@@ -243,6 +243,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: starting_camera
+--- !u!1 &327811098
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 327811099}
+  - component: {fileID: 327811100}
+  m_Layer: 5
+  m_Name: HUD
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &327811099
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327811098}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4072543465516614808}
+  - {fileID: 7855130698126955985}
+  - {fileID: 7370709039141782023}
+  m_Father: {fileID: 8188764023304756767}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &327811100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327811098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14e957dcf183db468d57f2363e7557b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: hud
 --- !u!1 &458817946
 GameObject:
   m_ObjectHideFlags: 0
@@ -6561,7 +6613,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.83496, y: 0.83496, z: 0.83496}
   m_Children: []
-  m_Father: {fileID: 8188764023304756767}
+  m_Father: {fileID: 327811099}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7189,7 +7241,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.83496, y: 0.83496, z: 0.83496}
   m_Children: []
-  m_Father: {fileID: 8188764023304756767}
+  m_Father: {fileID: 327811099}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -7290,12 +7342,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.83496, y: 0.83496, z: 0.83496}
   m_Children: []
-  m_Father: {fileID: 8188764023304756767}
+  m_Father: {fileID: 327811099}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 75.146484, y: 16.699219}
+  m_AnchoredPosition: {x: -194.85352, y: -173.30078}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8041145042910025463
@@ -10711,7 +10763,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &8188764023236611961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10742,13 +10794,6 @@ MonoBehaviour:
   minigunButton: {fileID: 8188764023563322451}
   laserButton: {fileID: 8188764023398774975}
   monsterToggle: {fileID: 8188764022158594602}
-  playerReadyStatusIndicators:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   weapons:
   - {fileID: 181754117363487078}
   - {fileID: 181754117967591477}
@@ -10954,9 +10999,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 4072543465516614808}
-  - {fileID: 7855130698126955985}
-  - {fileID: 7370709039141782023}
+  - {fileID: 327811099}
   - {fileID: 8188764024148785932}
   m_Father: {fileID: 8188764022386759113}
   m_RootOrder: 0
@@ -13180,7 +13223,7 @@ RectTransform:
   - {fileID: 8188764023236611963}
   - {fileID: 2428599368994134082}
   m_Father: {fileID: 8188764023304756767}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -13203,7 +13246,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &8188764024148785934
 MonoBehaviour:
   m_ObjectHideFlags: 0
