@@ -12,7 +12,6 @@ public class LobbyController : MonoBehaviour
     public Button laserButton;
 
     public Toggle monsterToggle;
-    public Image[] playerReadyStatusIndicators;
 
     public GameObject[] weapons;
 
@@ -25,17 +24,7 @@ public class LobbyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i != 6; i++)
-        {
-            if (GlobalVars.players[i])
-            {
-                playerReadyStatusIndicators[i].color = Color.green;
-            }
-            else
-            {
-                playerReadyStatusIndicators[i].color = Color.red;
-            }
-        }
+
     }
 
     public void OnRailgunButtonPressed()

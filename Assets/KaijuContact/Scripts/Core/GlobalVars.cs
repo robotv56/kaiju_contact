@@ -49,8 +49,6 @@ public static class GlobalVars
 
     public static Weapons LocalPlayerWeapon = Weapons.RAILGUN;
 
-    public static MenuController menuController;//main menu controller
-
     //populated by component isntances of AutoRegister.cs
     public static Dictionary<string, GameObject> globalGameObjects = new Dictionary<string, GameObject>();
 

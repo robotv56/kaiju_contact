@@ -326,7 +326,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: win_text
-  hideOnStart: 0
 --- !u!1 &871726695019140999
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +415,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: kaiju_tracker
-  hideOnStart: 1
 --- !u!114 &194854771309911687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -559,7 +557,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: win_screen
-  hideOnStart: 1
 --- !u!1 &4124480733723410933
 GameObject:
   m_ObjectHideFlags: 0
@@ -741,7 +738,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: adf_logo
-  hideOnStart: 1
 --- !u!1 &5972180377225176423
 GameObject:
   m_ObjectHideFlags: 0
@@ -9844,7 +9840,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: kaiju_logo
-  hideOnStart: 1
 --- !u!1001 &8188764022550185754
 PrefabInstance:
   m_ObjectHideFlags: 0
