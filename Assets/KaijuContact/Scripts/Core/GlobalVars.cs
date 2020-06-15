@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 public static class GlobalVars
 {
     public enum PlayerInput
@@ -56,6 +57,8 @@ public static class GlobalVars
     public static double goldenRatio = 1.61803398874989484820458683436;
 
     public static GameMaster gameMaster; // The master of games!
+
+    public static NetworkManager manager; // The UNET default network manager we are using
 
     // Mystery Science Theater 3000, The many names of David Ryder.
     public static string[] namePool = 

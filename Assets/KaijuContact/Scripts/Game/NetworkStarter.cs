@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using static GlobalVars;
 
 public class NetworkStarter : MonoBehaviour
 {
-    public NetworkManager manager;
     int n = 0;
     
     void Start()
     {
         manager = GetComponent<NetworkManager>();
-        manager.StartMatchMaker();
+        //manager.StartMatchMaker();
     }
 
     void Update()
