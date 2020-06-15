@@ -74,6 +74,7 @@ public class ClientMaster : NetworkBehaviour
     private GameObject icebergMaster;
     private GameObject startingCamera;
     private GameObject ocean;
+    private GameObject hud;
 
     private void Start()
     {
@@ -95,15 +96,9 @@ public class ClientMaster : NetworkBehaviour
             // Generate a name for the player
             CmdSetPlayerName(namePool[Random.Range(0, namePool.Length)] + "_" + Random.Range(0,99));
 
-            if (globalGameObjects.TryGetValue("canvas", out gameObjectCache))
-            {
-                //TODO ui
-                healthUI = gameObjectCache.transform.Find("Health UI").GetComponent<Text>();
-            }
-            else
-            {
-                Debug.LogError("Could not find canvas");
-            }
+            GlobalVars.globalGameObjects.TryGetValue("hud", out hud);
+            healthUI = hud.transform.Find("Health UI").GetComponent<Text>();
+            
             //Debug.Log(1);
         }
         if (isLocalPlayer && isServer)
@@ -143,11 +138,11 @@ public class ClientMaster : NetworkBehaviour
         isKaiju = false;
         globalGameObjects.TryGetValue("kaiju_tracker", out kaijuTracker);
 
-        //I'm sorry Andrew, but something wasn't working with trying to get the starting camera back again so I did this as a fix.
+        
         if (isLocalPlayer)
         {
-            startingCamera = GameObject.Find("Starting Camera");
-            ocean = GameObject.Find("Ocean");
+            GlobalVars.globalGameObjects.TryGetValue("starting_camera", out startingCamera);
+            GlobalVars.globalGameObjects.TryGetValue("ocean", out ocean);
         }
     }
 

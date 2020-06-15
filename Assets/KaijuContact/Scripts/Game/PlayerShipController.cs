@@ -21,13 +21,16 @@ public class PlayerShipController : MonoBehaviour
     public bool isLocal;
     public bool isAlive;
 
+    private GameObject hud;
+
     private void Start()
     {
         core = GetComponent<ShipCore>();
         turret = transform.Find("Ship Pivot").Find("Ship Body").Find("Turret Base").Find("Turret Horizontal").GetComponent<ShipTurret>();
         cameraPivot = transform.Find("Camera Pivot").gameObject;
         mainCamera = cameraPivot.transform.Find("Ship Camera").GetComponent<Camera>();
-        crosshair = GameObject.Find("Canvas").transform.Find("Crosshair").GetComponent<Image>();
+        GlobalVars.globalGameObjects.TryGetValue("hud", out hud);
+        crosshair = hud.transform.Find("Crosshair").GetComponent<Image>();
     }
     
     private void Update()

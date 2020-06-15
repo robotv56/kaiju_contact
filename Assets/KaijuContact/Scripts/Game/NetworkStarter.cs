@@ -11,7 +11,6 @@ public class NetworkStarter : MonoBehaviour
     void Start()
     {
         manager = GetComponent<NetworkManager>();
-        //manager.StartMatchMaker();
     }
 
     void Update()
@@ -29,7 +28,7 @@ public class NetworkStarter : MonoBehaviour
                 {
                     for (int i = 0; i < manager.matches.Count; i++)
                     {
-                        if (manager.matches[i].currentSize < 8)
+                        if (manager.matches[i].currentSize < 8 && manager.matches[i].currentSize > 0)
                         {
                             //Join
                             manager.matchName = manager.matches[i].name;
