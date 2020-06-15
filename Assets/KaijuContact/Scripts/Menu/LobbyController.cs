@@ -52,9 +52,4 @@ public class LobbyController : MonoBehaviour
         weapons[1].SetActive(true);
         weapons[2].SetActive(false);
     }
-
-    public void OnReadyButtonPressed()
-    {
-        GlobalVars.players[0] = !GlobalVars.players[0];
-    }
 }
