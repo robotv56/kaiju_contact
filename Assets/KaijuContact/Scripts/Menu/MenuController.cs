@@ -86,7 +86,6 @@ public class MenuController : MonoBehaviour
     {
         if(Application.isEditor)
         {
-            UnityEditor.EditorApplication.ExitPlaymode();
         }
         else
         {

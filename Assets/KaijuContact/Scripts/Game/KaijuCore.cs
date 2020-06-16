@@ -214,6 +214,11 @@ public class KaijuCore : MonoBehaviour
         return submergedTime > submergedTransitionTime && submergedTime < submergedTimeMax - submergedTransitionTime;
     }
 
+    public bool IsSubmerged()
+    {
+        return FullySubmerged();
+    }
+
     private float IncreaseTo(float currentValue, float targetValue, float rate)
     {
         if (currentValue < targetValue)

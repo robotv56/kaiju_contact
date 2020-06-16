@@ -347,10 +347,17 @@ public class ClientMaster : NetworkBehaviour
                 //setting cache here
                 if(globalGameObjects.TryGetValue("kaiju_track_point", out gameObjectCache))
                 {
-                    if(!kaijuTracker.active)
+                    if(!kaijuTracker.active && !kaijuCore.IsSubmerged())
                     {
                         kaijuTracker.SetActive(true);
                     }
+                    
+                    if(kaijuCore.IsSubmerged())
+                    {
+                        Debug.Log("submerged");
+                        kaijuTracker.SetActive(false);
+                    }
+
                     var vect = playerCameras[1].GetComponent<Camera>().WorldToScreenPoint(gameObjectCache.transform.position);
                     var z = vect.z;
                     vect.z = 0;
