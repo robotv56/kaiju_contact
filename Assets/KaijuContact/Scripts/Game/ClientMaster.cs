@@ -70,6 +70,7 @@ public class ClientMaster : NetworkBehaviour
 
     [SerializeField] private GameObject gameMasterPrefab;
     [SerializeField] private GameObject icebergMasterPrefab;
+    [SerializeField] private GameObject missileLauncher;
 
     private GameObject icebergMaster;
     private GameObject startingCamera;
@@ -672,5 +673,41 @@ public class ClientMaster : NetworkBehaviour
     private void RpcResetMatch()
     {
         ResetMatch();
+    }
+
+    [Command(channel = 2)]
+    public void CmdSyncMissile(Vector3 cameraPos, Vector3 cameraDir)
+    {
+        SyncMissile(cameraPos, cameraDir);
+        RpcSyncMissile(cameraPos, cameraDir);
+    }
+
+    [ClientRpc(channel = 2)]
+    private void RpcSyncMissile(Vector3 cameraPos, Vector3 cameraDir)
+    {
+        SyncMissile(cameraPos, cameraDir);
+    }
+
+    private void SyncMissile(Vector3 cameraPos, Vector3 cameraDir)
+    {
+        missileLauncher.GetComponent<MissileLauncher>().SetAimPoint(cameraPos, cameraDir);
+    }
+
+    [Command]
+    public void CmdFireMissiles()
+    {
+        FireMissiles();
+        RpcFireMissiles();
+    }
+    
+    [ClientRpc]
+    private void RpcFireMissiles()
+    {
+        FireMissiles();
+    }
+
+    private void FireMissiles()
+    {
+        missileLauncher.GetComponent<MissileLauncher>().Launch();
     }
 }
