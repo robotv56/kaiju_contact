@@ -397,6 +397,11 @@ public class ClientMaster : NetworkBehaviour
         }
     }
 
+    public ShipCore GetShipCore()
+    {
+        return shipCore;
+    }
+
     public bool GetIsKaiju()
     {
         return isKaiju;

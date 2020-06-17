@@ -22,11 +22,13 @@ public class ShipCore : MonoBehaviour
     private float dyingAmount;
 
     private GameObject shipPivot;
+    private ShipTurret turret;
 
     void Start()
     {
         shipPivot = transform.Find("Ship Pivot").gameObject;
         rotation = shipPivot.transform.eulerAngles.y;
+        turret = transform.Find("Ship Pivot").Find("Ship Body").Find("Turret Base").Find("Turret Horizontal").GetComponent<ShipTurret>();
     }
 
     void Update()
@@ -57,6 +59,7 @@ public class ShipCore : MonoBehaviour
         //Debug.Log("Rudder: " + rudder + " Speed: " + speed + " Throttle: " + throttle);
         // Apply Transforms
         rotation += rudder * RudderEffectiveness(speed, rudderMaxEffectSpeed) * Time.deltaTime;
+        turret.ExternalRotation(-rudder * RudderEffectiveness(speed, rudderMaxEffectSpeed) * Time.deltaTime);
         shipPivot.transform.rotation = Quaternion.Euler(0f, rotation, Mathf.Clamp(rudder * Mathf.Abs(RudderEffectiveness(speed, rudderMaxEffectSpeed) * (speed / speedMaxFwd)) * 0.45f, -7.2f, 7.2f));
         transform.position += shipPivot.transform.forward * speed * Time.deltaTime;
 

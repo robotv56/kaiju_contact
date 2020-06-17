@@ -60,18 +60,16 @@ public class Missile : MonoBehaviour
             case MissileState.IDLE://do nothing
                 break;
             case MissileState.LAUNCHED://fly up
-                {
-                    body.position += Vector3.up * Time.deltaTime * MissileLauncher.missileSpeed * (0.1f + 0.9f * (seconds / launchLength));
-                }
+                transform.position += Vector3.up * Time.deltaTime * MissileLauncher.missileSpeed * (0.1f + 0.9f * (seconds / launchLength));
+                transform.position += Quaternion.Euler(0f, from.GetComponent<ClientMaster>().GetShipCore().GetRotation(), 0f) * Vector3.forward * Time.deltaTime * from.GetComponent<ClientMaster>().GetShipCore().GetSpeed() * (1f - (seconds / launchLength));
+                this.transform.localRotation = Quaternion.Euler(-90, 0, 0);
                 break;
             case MissileState.HOMING://track laser point and turn towards it
-                {
-                    direction = trackPoint - this.transform.position;
-                    heading = direction.normalized;// / direction.magnitude;//normalize
-                    look = Quaternion.LookRotation(heading);
-                    body.rotation = Quaternion.RotateTowards(body.rotation, look, MissileLauncher.missileTrackStrength * Time.deltaTime);
-                    body.position += transform.forward * Time.deltaTime * MissileLauncher.missileSpeed;
-                }
+                direction = trackPoint - this.transform.position;
+                heading = direction.normalized;// / direction.magnitude;//normalize
+                look = Quaternion.LookRotation(heading);
+                body.rotation = Quaternion.RotateTowards(body.rotation, look, MissileLauncher.missileTrackStrength * Time.deltaTime);
+                body.position += transform.forward * Time.deltaTime * MissileLauncher.missileSpeed;
                 break;
         }
 
