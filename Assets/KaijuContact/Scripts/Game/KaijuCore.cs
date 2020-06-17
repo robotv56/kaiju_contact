@@ -153,7 +153,7 @@ public class KaijuCore : MonoBehaviour
             {
                 icebeamTime = 0f;
                 icebeamCooldown = icebeamCooldownMax;
-
+                iceBeamVFX.GetComponent<ParticleSystem>().Stop();
                 iceBeamVFX.SetActive(false);
             }
         }
