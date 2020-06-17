@@ -54,17 +54,12 @@ public class MenuController : MonoBehaviour
         }
         else */if(state == MenuState.HELP && (Input.GetKeyDown(KeyCode.Escape)/* || Input.GetKeyDown(KeyCode.F1)*/))
         {
+            Debug.Log("called");
             state = lastState;
+            Debug.Log(state);
             helpScreen.SetActive(false);
-            switch (lastState)
-            {
-                case MenuState.LOBBY:
-                    lobby.SetActive(true);
-                    break;
-                case MenuState.MAIN:
-                    helpScreen.SetActive(true);
-                    break;
-            }
+            mainMenu.SetActive(true);
+            Debug.Log("done");
         }
 
         if ((state != MenuState.PLAYING) != background.activeSelf)
@@ -75,6 +70,7 @@ public class MenuController : MonoBehaviour
 
     public void OnPlayButtonPressed()//activates lobby gui, NOT network lobby
     {
+        lastState = state;
         state = MenuState.LOBBY;
         mainMenu.SetActive(false);
         manager.StartMatchMaker();
@@ -82,25 +78,14 @@ public class MenuController : MonoBehaviour
 
     public void OnHelpButtonPressed()
     {
-        lastState = state;
         state = MenuState.HELP;
         helpScreen.SetActive(true);
-        switch (lastState)
-        {
-            case MenuState.MAIN:
-                mainMenu.SetActive(false);
-                break;
-            case MenuState.LOBBY:
-                lobby.SetActive(false);
-                break;
-        }
     }
 
     public void OnQuitButtonPressed()
     {
         if(Application.isEditor)
         {
-            //UnityEditor.EditorApplication.ExitPlaymode();
         }
         else
         {
@@ -111,6 +96,15 @@ public class MenuController : MonoBehaviour
     public void OnStartButtonPressed()
     {
         gameMaster.StartCountdown();
+    }
+
+    public void OnReturnButtonPressed()
+    {
+        state = MenuState.MAIN;
+
+        helpScreen.SetActive(false);
+
+        mainMenu.SetActive(true);
     }
 
     public void LobbyActive(bool active)
