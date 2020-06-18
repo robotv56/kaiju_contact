@@ -10,6 +10,7 @@ public class PlayerShipController : MonoBehaviour
     [SerializeField] private PlayerInput playerInput = PlayerInput.KEYBOARD;
     private ShipCore core;
     private ShipTurret turret;
+    private MissileLauncher missileLauncher;
     private GameObject cameraPivot;
     private Camera mainCamera;
     private Vector2 cameraAim;
@@ -21,13 +22,17 @@ public class PlayerShipController : MonoBehaviour
     public bool isLocal;
     public bool isAlive;
 
+    private GameObject hud;
+
     private void Start()
     {
         core = GetComponent<ShipCore>();
         turret = transform.Find("Ship Pivot").Find("Ship Body").Find("Turret Base").Find("Turret Horizontal").GetComponent<ShipTurret>();
+        missileLauncher = transform.Find("Ship Pivot").Find("Ship Body").Find("MissileLauncher").GetComponent<MissileLauncher>();
         cameraPivot = transform.Find("Camera Pivot").gameObject;
         mainCamera = cameraPivot.transform.Find("Ship Camera").GetComponent<Camera>();
-        crosshair = GameObject.Find("Canvas").transform.Find("Crosshair").GetComponent<Image>();
+        GlobalVars.globalGameObjects.TryGetValue("hud", out hud);
+        crosshair = hud.transform.Find("Crosshair").GetComponent<Image>();
     }
     
     private void Update()
@@ -71,6 +76,10 @@ public class PlayerShipController : MonoBehaviour
                     if (Input.GetMouseButton(0))
                     {
                         turret.FireCannon(playerMask);
+                    }
+                    if (Input.GetMouseButton(1))
+                    {
+                        missileLauncher.Launch();
                     }
                 }
             }
