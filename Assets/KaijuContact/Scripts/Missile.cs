@@ -122,6 +122,22 @@ public class Missile : MonoBehaviour
     {
         if ((state == MissileState.LAUNCHED || state == MissileState.HOMING) && (collision.gameObject.layer == 9 || collision.gameObject.layer == 11))
         {
+            bool hitLocal = false;
+            if (collision.transform.root.GetComponent<ClientMaster>())
+            {
+                hitLocal = collision.transform.root.GetComponent<ClientMaster>().GetIsLocalPlayer();
+            }
+            if (collision.transform.gameObject.layer == 9 && hitLocal && collision.transform.gameObject.name != "Slash")
+            {
+                if (collision.transform.gameObject.name == "Kaiju Weakspot")
+                {
+                    collision.transform.root.GetComponent<ClientMaster>().CmdDamageKaiju(4f);
+                }
+                else
+                {
+                    collision.transform.root.GetComponent<ClientMaster>().CmdDamageKaiju(1f);
+                }
+            }
             if (collision.gameObject.layer == 11 && fromLocal)
             {
                 collision.gameObject.GetComponent<Iceberg>().LocalDamage(10000f, from);
