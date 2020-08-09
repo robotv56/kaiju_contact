@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class KaijuCore : MonoBehaviour
 {
-    public GameObject iceBeamVFX;
-
     private GameObject kaijuPivot;
     private Vector3 kaijuDesiredMovement;
     private Vector3 kaijuMovement;
@@ -153,8 +151,6 @@ public class KaijuCore : MonoBehaviour
             {
                 icebeamTime = 0f;
                 icebeamCooldown = icebeamCooldownMax;
-                iceBeamVFX.GetComponent<ParticleSystem>().Stop();
-                iceBeamVFX.SetActive(false);
             }
         }
     }
@@ -216,11 +212,6 @@ public class KaijuCore : MonoBehaviour
     private bool FullySubmerged()
     {
         return submergedTime > submergedTransitionTime && submergedTime < submergedTimeMax - submergedTransitionTime;
-    }
-
-    public bool IsSubmerged()
-    {
-        return FullySubmerged();
     }
 
     private float IncreaseTo(float currentValue, float targetValue, float rate)
@@ -298,15 +289,11 @@ public class KaijuCore : MonoBehaviour
             icebergs[0] = SpawnIceberg(icebeamPoint);
             icebergsSpawned = 1;
             icebeamTime = icebeamTimeMax;
-
-            iceBeamVFX.SetActive(true);
         }
     }
     public void UpdateIcebeam(Vector3 icePoint)
     {
         icebeamPoint = new Vector3(icePoint.x, 0f, icePoint.z);
-
-        iceBeamVFX.transform.LookAt(icePoint);
     }
     public bool IcebeamFiring()
     {

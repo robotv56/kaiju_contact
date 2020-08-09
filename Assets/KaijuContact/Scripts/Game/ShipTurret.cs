@@ -203,9 +203,4 @@ public class ShipTurret : MonoBehaviour
         }
         return v;
     }
-
-    public void ExternalRotation(float rotation)
-    {
-        turretRotation = Mathf.Clamp(turretRotation + rotation, -turretRotationMax, turretRotationMax);
-    }
 }

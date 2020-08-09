@@ -70,12 +70,10 @@ public class ClientMaster : NetworkBehaviour
 
     [SerializeField] private GameObject gameMasterPrefab;
     [SerializeField] private GameObject icebergMasterPrefab;
-    [SerializeField] private GameObject missileLauncher;
 
     private GameObject icebergMaster;
     private GameObject startingCamera;
     private GameObject ocean;
-    private GameObject hud;
 
     private void Start()
     {
@@ -97,9 +95,15 @@ public class ClientMaster : NetworkBehaviour
             // Generate a name for the player
             CmdSetPlayerName(namePool[Random.Range(0, namePool.Length)] + "_" + Random.Range(0,99));
 
-            GlobalVars.globalGameObjects.TryGetValue("hud", out hud);
-            healthUI = hud.transform.Find("Health UI").GetComponent<Text>();
-            
+            if (globalGameObjects.TryGetValue("canvas", out gameObjectCache))
+            {
+                //TODO ui
+                healthUI = gameObjectCache.transform.Find("Health UI").GetComponent<Text>();
+            }
+            else
+            {
+                Debug.LogError("Could not find canvas");
+            }
             //Debug.Log(1);
         }
         if (isLocalPlayer && isServer)
@@ -139,11 +143,11 @@ public class ClientMaster : NetworkBehaviour
         isKaiju = false;
         globalGameObjects.TryGetValue("kaiju_tracker", out kaijuTracker);
 
-        
+        //I'm sorry Andrew, but something wasn't working with trying to get the starting camera back again so I did this as a fix.
         if (isLocalPlayer)
         {
-            GlobalVars.globalGameObjects.TryGetValue("starting_camera", out startingCamera);
-            GlobalVars.globalGameObjects.TryGetValue("ocean", out ocean);
+            startingCamera = GameObject.Find("Starting Camera");
+            ocean = GameObject.Find("Ocean");
         }
     }
 
@@ -347,17 +351,10 @@ public class ClientMaster : NetworkBehaviour
                 //setting cache here
                 if(globalGameObjects.TryGetValue("kaiju_track_point", out gameObjectCache))
                 {
-                    if(!kaijuTracker.active && !kaijuCore.IsSubmerged())
+                    if(!kaijuTracker.active)
                     {
                         kaijuTracker.SetActive(true);
                     }
-                    
-                    if(kaijuCore.IsSubmerged())
-                    {
-                        Debug.Log("submerged");
-                        kaijuTracker.SetActive(false);
-                    }
-
                     var vect = playerCameras[1].GetComponent<Camera>().WorldToScreenPoint(gameObjectCache.transform.position);
                     var z = vect.z;
                     vect.z = 0;
@@ -402,11 +399,6 @@ public class ClientMaster : NetworkBehaviour
         {
             CmdUpdatePlayer(pos, kdr, kr, kdm, km, ks, srud, sarud, sr, st, ss, sap, stv);
         }
-    }
-
-    public ShipCore GetShipCore()
-    {
-        return shipCore;
     }
 
     public bool GetIsKaiju()
@@ -685,41 +677,5 @@ public class ClientMaster : NetworkBehaviour
     private void RpcResetMatch()
     {
         ResetMatch();
-    }
-
-    [Command(channel = 2)]
-    public void CmdSyncMissile(Vector3 cameraPos, Vector3 cameraDir)
-    {
-        SyncMissile(cameraPos, cameraDir);
-        RpcSyncMissile(cameraPos, cameraDir);
-    }
-
-    [ClientRpc(channel = 2)]
-    private void RpcSyncMissile(Vector3 cameraPos, Vector3 cameraDir)
-    {
-        SyncMissile(cameraPos, cameraDir);
-    }
-
-    private void SyncMissile(Vector3 cameraPos, Vector3 cameraDir)
-    {
-        missileLauncher.GetComponent<MissileLauncher>().SetAimPoint(cameraPos, cameraDir);
-    }
-
-    [Command]
-    public void CmdFireMissiles()
-    {
-        FireMissiles();
-        RpcFireMissiles();
-    }
-    
-    [ClientRpc]
-    private void RpcFireMissiles()
-    {
-        FireMissiles();
-    }
-
-    private void FireMissiles()
-    {
-        missileLauncher.GetComponent<MissileLauncher>().Launch();
     }
 }

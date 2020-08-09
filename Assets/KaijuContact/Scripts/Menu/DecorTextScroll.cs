@@ -25,21 +25,24 @@ public class DecorTextScroll : MonoBehaviour
     {
         while(running)
         {
-            for (int i = 0; i != charsIn; i++)
+            if(GlobalVars.uiActive)
             {
-                buffer += Random.Range(0, 10);
+                for (int i = 0; i != charsIn; i++)
+                {
+                    buffer += Random.Range(0, 10);
+                    text.SetText(buffer);
+                    yield return new WaitForSeconds(0.1f);
+                }
+                buffer += "\n";
+                if (lines > linesIn)
+                {
+                    buffer = buffer.Substring(charsIn+1);
+                }
+                //Debug.Log("line done");
+                lines++;
                 text.SetText(buffer);
-                yield return new WaitForSeconds(0.1f);
+                //yield return new WaitForSeconds(0.001f);
             }
-            buffer += "\n";
-            if (lines > linesIn)
-            {
-                buffer = buffer.Substring(charsIn + 1);
-            }
-            //Debug.Log("line done");
-            lines++;
-            text.SetText(buffer);
-            //yield return new WaitForSeconds(0.001f);
         }
 
         yield return null;

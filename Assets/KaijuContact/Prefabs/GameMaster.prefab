@@ -244,11 +244,6 @@ MonoBehaviour:
   - {fileID: 7451720165014343806}
   - {fileID: 4639707741297720713}
   - {fileID: 2063842787686746748}
-  menu: {fileID: 0}
-  winScreen: {fileID: 0}
-  adfLogo: {fileID: 0}
-  kaijuLogo: {fileID: 0}
-  wintext: {fileID: 0}
 --- !u!1 &4639707741297720713
 GameObject:
   m_ObjectHideFlags: 0
