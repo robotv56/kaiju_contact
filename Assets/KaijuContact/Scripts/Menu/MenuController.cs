@@ -1,140 +1,165 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Timeline;
-using UnityEngine.Playables;
-using UnityEngine.UI;
+using static GlobalVars;
 
 public enum MenuState
 {
     MAIN,
-    JOIN,
-    HOST,
-    CONFIG
+    HELP,
+    LOBBY,
+    PLAYING,
+    WINSCREEN
 }
 
 public class MenuController : MonoBehaviour
 {
-    public TimelineAsset[] animations;
-    //0 = open main menu
-    //1 = close main menu
-    //2 = open join menu
-    //3 = close join menu
+    MenuState state = MenuState.MAIN;
+    MenuState lastState = MenuState.MAIN;
+    GameObject mainMenu;
+    GameObject background;
+    GameObject lobby;
+    GameObject playerList;
+    GameObject helpScreen;
+    GameObject hud;
+    GameObject adfLogo;
+    GameObject kaijuLogo;
+    GameObject winScreen;
+    GameObject wintextObject;
+    TMPro.TextMeshProUGUI wintext;
 
-    public PlayableDirector[] directors;
-    //0 =  main menu
-    //1 = join menu
-
-    public MenuState state = MenuState.MAIN;//state menu is in
-
-    private MenuState oldState;//store old state for 
-
-    private bool isDirty = false;
-    private bool isWorking = false;
-
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-        GlobalVars.menuController = this;
+        GlobalVars.globalGameObjects.TryGetValue("main_menu", out mainMenu);
+        GlobalVars.globalGameObjects.TryGetValue("background", out background);
+        GlobalVars.globalGameObjects.TryGetValue("lobby", out lobby);
+        GlobalVars.globalGameObjects.TryGetValue("player_list", out playerList);
+        GlobalVars.globalGameObjects.TryGetValue("help_screen", out helpScreen);
+        GlobalVars.globalGameObjects.TryGetValue("hud", out hud);
+        GlobalVars.globalGameObjects.TryGetValue("win_screen", out winScreen);
+        GlobalVars.globalGameObjects.TryGetValue("adf_logo", out adfLogo);
+        GlobalVars.globalGameObjects.TryGetValue("kaiju_logo", out kaijuLogo);
+        GlobalVars.globalGameObjects.TryGetValue("win_text", out wintextObject);
+        wintext = wintextObject.GetComponent<TMPro.TextMeshProUGUI>();
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape) && state != MenuState.MAIN)//hack to make an "event" for key presses. unity pls
+        // Help Menu Open/Close
+        /*if (state != MenuState.HELP && Input.GetKeyDown(KeyCode.F1))
         {
-            OnEscapeKeyPressed();
+            OnHelpButtonPressed();
+        }
+        else */if(state == MenuState.HELP && (Input.GetKeyDown(KeyCode.Escape)/* || Input.GetKeyDown(KeyCode.F1)*/))
+        {
+            Debug.Log("called");
+            state = lastState;
+            Debug.Log(state);
+            helpScreen.SetActive(false);
+            mainMenu.SetActive(true);
+            Debug.Log("done");
         }
 
-        if(isDirty && !isWorking)
+        if ((state != MenuState.PLAYING) != background.activeSelf)
         {
-            isDirty = false;
-            StartCoroutine("coroutine");
-        }
-        else if(isDirty)
-        {
-            isDirty = false;
-            Debug.Log("Attempted to move while animating");
-        }
-
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            for(int i = 0; i != 6; i++)
-            {
-                GlobalVars.players[i] = true;
-            }
+            background.SetActive(state != MenuState.PLAYING);
         }
     }
 
-    //coroutine
-    IEnumerator coroutine()
+    public void OnPlayButtonPressed()//activates lobby gui, NOT network lobby
     {
-        isWorking = true;
+        lastState = state;
+        state = MenuState.LOBBY;
+        mainMenu.SetActive(false);
+        manager.StartMatchMaker();
+    }
 
-        //animate old window closing
-        switch (oldState)
+    public void OnHelpButtonPressed()
+    {
+        state = MenuState.HELP;
+        helpScreen.SetActive(true);
+    }
+
+    public void OnQuitButtonPressed()
+    {
+        if(Application.isEditor)
         {
-            //TODO
-            case MenuState.MAIN:
-                {
-                    directors[0].Play(animations[1]);//play main menu close animation
-                    yield return new WaitForSeconds(1.1f);
-                    directors[0].gameObject.SetActive(false);
-                }
-                break;
-
-            case MenuState.JOIN:
-                {
-                    directors[1].Play(animations[3]);//play join menu close animation
-                    yield return new WaitForSeconds(1.1f);
-                    directors[1].gameObject.SetActive(false);
-                }
-                break;
         }
-        
-        //animate new window opening
-        switch (state)
+        else
         {
-            //TODO
-            case MenuState.MAIN:
-                {
-                    directors[0].gameObject.SetActive(true);
-                    directors[0].Play(animations[0]);//play main menu open animation
-                }
-                break;
-
-            case MenuState.JOIN:
-                {
-                    directors[1].gameObject.SetActive(true);
-                    directors[1].Play(animations[2]);//play join menu open animation
-                }
-                break;
+            Application.Quit();
         }
-        
-        isWorking = false;
-        yield return null;
     }
 
-    //events for main menu
-    public void OnJoinButtonPressed()
+    public void OnStartButtonPressed()
     {
-        oldState = state;
-        state = MenuState.JOIN;
-        isDirty = true;
+        gameMaster.StartCountdown();
     }
 
-    public void OnHostButtonPressed()
+    public void OnReturnButtonPressed()
     {
-        oldState = state;
-        state = MenuState.HOST;
-        isDirty = true;
-    }
-
-    public void OnEscapeKeyPressed()
-    {
-        oldState = state;
         state = MenuState.MAIN;
-        isDirty = true;
+
+        helpScreen.SetActive(false);
+
+        mainMenu.SetActive(true);
     }
 
-    //TODO write lobby manager
+    public void LobbyActive(bool active)
+    {
+        if (active && !lobby.activeSelf)
+        {
+            state = MenuState.LOBBY;
+        }
+        lobby.SetActive(active);
+        if (active && hud.activeSelf)
+        {
+            hud.SetActive(false);
+        }
+    }
 
+    public void WinScreenShow(Winners winner)
+    {
+        state = MenuState.WINSCREEN;
+        winScreen.SetActive(true);
+        adfLogo.SetActive(winner == Winners.ADF_WINS);
+        kaijuLogo.SetActive(winner != Winners.ADF_WINS);
+        if (winner == Winners.ADF_WINS)
+        {
+            wintext.text = "ADF Victory";
+        }
+        else
+        {
+            wintext.text = "Kaiju Victory";
+        }
+        if (hud.activeSelf)
+        {
+            hud.SetActive(false);
+        }
+    }
+
+    public void WinScreenHide()
+    {
+        winScreen.SetActive(false);
+        adfLogo.SetActive(false);
+        kaijuLogo.SetActive(false);
+    }
+
+    public void PlayHasStarted()
+    {
+        state = MenuState.PLAYING;
+        hud.SetActive(true);
+    }
+
+    public MenuState GetState()
+    {
+        return state;
+    }
+
+    public void SetPlayerList(string list)
+    {
+        playerList.GetComponent<TMPro.TextMeshProUGUI>().text = list;
+    }
 }

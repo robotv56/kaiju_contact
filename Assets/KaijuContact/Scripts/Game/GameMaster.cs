@@ -21,18 +21,22 @@ public class GameMaster : NetworkBehaviour {
     [SyncVar] Winners winner = Winners.UNDETERMINED;
     private float matchTimer;
     private bool starting;
-    [SerializeField] GameObject[] spawns = new GameObject[8];
+    [SerializeField] private GameObject[] spawns = new GameObject[8];
 
     //UI refs
-    public GameObject menu;
-    public GameObject winScreen;
-    public GameObject adfLogo;
-    public GameObject kaijuLogo;
-    public TMPro.TextMeshProUGUI wintext;
+    private GameObject startButton;
+    private GameObject kaijuOptInUI;
+    private GameObject menu;
+    private MenuController menuController;
 
     private void Start()
     {
         gameMaster = this;
+        GlobalVars.globalGameObjects.TryGetValue("ready_button", out startButton);
+        GlobalVars.globalGameObjects.TryGetValue("kaiju_optin", out kaijuOptInUI);
+        GlobalVars.globalGameObjects.TryGetValue("menu", out menu);
+        menuController = menu.GetComponent<MenuController>();
+        menuController.LobbyActive(true);
     }
 
     private void Update()
@@ -48,23 +52,30 @@ public class GameMaster : NetworkBehaviour {
             }
         }
 
+        if (gameState == GameStates.PRE_LOBBY)
+        {
+            if (kaijuOptInUI.GetComponent<Toggle>().isOn != kaijuOptIn)
+            {
+                kaijuOptIn = kaijuOptInUI.GetComponent<Toggle>().isOn;
+            }
+        }
+
         if (isServer)
         {
             if (gameState == GameStates.PRE_LOBBY)
             {
-                // ----- Have Pre-Lobby UI Trigger This -----
-                if (playerCount > 1 && matchTimer == 0f)    
+                if (!startButton.activeSelf && playerCount > 1 && !starting)
                 {
-                    if (!starting)
-                    {
-                        matchTimer = 5f;
-                        starting = true;
-                    }
-                    else
-                    {
-                        StartMatch();
-                        starting = false;
-                    }
+                    startButton.SetActive(true);
+                }
+                else if (startButton.activeSelf && (playerCount < 2 || starting))
+                {
+                    startButton.SetActive(false);
+                }
+                if (starting && matchTimer == 0f)    
+                {
+                    StartMatch();
+                    starting = false;
                 }
             }
 
@@ -115,14 +126,29 @@ public class GameMaster : NetworkBehaviour {
         }
     }
 
+    public void StartCountdown()
+    {
+        if (matchTimer == 0f && playerCount > 1 && gameState == GameStates.PRE_LOBBY)
+        {
+            matchTimer = 5f;
+            starting = true;
+            startButton.SetActive(false);
+        }
+    }
+
     private void StartMatch()
     {
         if (isServer && gameState == GameStates.PRE_LOBBY)
         {
             gameState = GameStates.IN_PROGRESS;
+            RpcTransmitGameState(gameState);
             winner = Winners.UNDETERMINED;
 
             // Disable Pre-Lobby UI
+            menuController.PlayHasStarted();
+            menuController.LobbyActive(false);
+
+            RpcStartMatch();
 
             UpdateOptIn();
             Debug.Log(
@@ -187,21 +213,12 @@ public class GameMaster : NetworkBehaviour {
         if (isServer && gameState == GameStates.IN_PROGRESS)
         {
             gameState = GameStates.POST_LOBBY;
+            RpcTransmitGameState(gameState);
 
             // Enable Post-Lobby UI
-            menu.SetActive(true);
-            winScreen.SetActive(true);
+            menuController.WinScreenShow(winner);
 
-            if(winner == Winners.ADF_WINS)
-            {
-                adfLogo.SetActive(true);
-                wintext.text = "ADF Victory";
-            }
-            else
-            {
-                kaijuLogo.SetActive(true);
-                wintext.text = "Kaiju Victory";
-            }
+            RpcEndMatch();
 
             for (int i = 0; i < 32; i++)
             {
@@ -218,15 +235,15 @@ public class GameMaster : NetworkBehaviour {
         if (isServer && gameState == GameStates.POST_LOBBY)
         {
             gameState = GameStates.PRE_LOBBY;
+            RpcTransmitGameState(gameState);
             winner = Winners.UNDETERMINED;
 
             // Disable Post-Lobby UI
-            adfLogo.SetActive(false);
-            kaijuLogo.SetActive(false);
-            winScreen.SetActive(false);
-            menu.SetActive(false);
-            
+            menuController.WinScreenHide();
             // Enable Pre-Lobby UI
+            menuController.LobbyActive(true);
+
+            RpcResetMatch();
 
             for (int i = 0; i < 32; i++)
             {
@@ -311,6 +328,21 @@ public class GameMaster : NetworkBehaviour {
         }
     }
 
+    public void UpdatePlayerNameList()
+    {
+        string list = "Players:\n";
+        for (int i = 0; i < 8; i++)
+        {
+            list += playerNames[i];
+            if (i == localPlayer)
+            {
+                list += " (you)";
+            }
+            list += "\n";
+        }
+        menuController.SetPlayerList(list);
+    }
+
     public GameObject FindCurrentKaiju()
     {
         for (int i =  0; i < 32; i++)
@@ -341,6 +373,7 @@ public class GameMaster : NetworkBehaviour {
     {
         if (localPlayer != 255)
         {
+            Debug.Log("Changed Kaiju OptIn to: " + choice);
             kaijuOptIn = choice;
             players[localPlayer].GetComponent<ClientMaster>().CmdUpdateKaijuOptIn(choice);
         }
@@ -349,5 +382,31 @@ public class GameMaster : NetworkBehaviour {
     public bool IsGameInProgress()
     {
         return gameState == GameStates.IN_PROGRESS;
+    }
+
+    [ClientRpc]
+    private void RpcTransmitGameState(GameStates state)
+    {
+        gameState = state;
+    }
+
+    [ClientRpc]
+    private void RpcStartMatch()
+    {
+        menuController.PlayHasStarted();
+        menuController.LobbyActive(false);
+    }
+
+    [ClientRpc]
+    private void RpcEndMatch()
+    {
+        menuController.WinScreenShow(winner);
+    }
+
+    [ClientRpc]
+    private void RpcResetMatch()
+    {
+        menuController.WinScreenHide();
+        menuController.LobbyActive(true);
     }
 }
